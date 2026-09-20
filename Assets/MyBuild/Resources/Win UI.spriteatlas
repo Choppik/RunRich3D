@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Win UI
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 35372ef7b67da5e4f8664385953140f7, type: 3}
+    - {fileID: 2800000, guid: 8739ac4c871c44649a6a2326a62ab5ce, type: 3}
+    - {fileID: 2800000, guid: 711b7e65838f8fb489f9a72e97cca2c3, type: 3}
+    - {fileID: 2800000, guid: 09a2bdb47fbc6154abb261444d1ba8c8, type: 3}
+    - {fileID: 2800000, guid: b1913784bc6a2584699dacebdeb09674, type: 3}
+    - {fileID: 2800000, guid: 6a15a4111a311d24a9c835eac9e7adcc, type: 3}
+    - {fileID: 2800000, guid: 2e1b79b6a2c4dae4aa8a35a363f8d98a, type: 3}
+    - {fileID: 2800000, guid: eed77437874ccc94cbc41ffa970054f6, type: 3}
+    - {fileID: 2800000, guid: 30397cd36e31bb64cb8e2921c9cb0fa1, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 6a15a4111a311d24a9c835eac9e7adcc: 21300000
+    - 30397cd36e31bb64cb8e2921c9cb0fa1: 21300000
+    - b1913784bc6a2584699dacebdeb09674: 21300000
+    - 09a2bdb47fbc6154abb261444d1ba8c8: 21300000
+    - 711b7e65838f8fb489f9a72e97cca2c3: 21300000
+    - 2e1b79b6a2c4dae4aa8a35a363f8d98a: 21300000
+    - eed77437874ccc94cbc41ffa970054f6: 21300000
+    - 35372ef7b67da5e4f8664385953140f7: 21300000
+    - 8739ac4c871c44649a6a2326a62ab5ce: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6a15a4111a311d24a9c835eac9e7adcc, type: 3}
+  - {fileID: 21300000, guid: 30397cd36e31bb64cb8e2921c9cb0fa1, type: 3}
+  - {fileID: 21300000, guid: b1913784bc6a2584699dacebdeb09674, type: 3}
+  - {fileID: 21300000, guid: 09a2bdb47fbc6154abb261444d1ba8c8, type: 3}
+  - {fileID: 21300000, guid: 711b7e65838f8fb489f9a72e97cca2c3, type: 3}
+  - {fileID: 21300000, guid: 2e1b79b6a2c4dae4aa8a35a363f8d98a, type: 3}
+  - {fileID: 21300000, guid: eed77437874ccc94cbc41ffa970054f6, type: 3}
+  - {fileID: 21300000, guid: 35372ef7b67da5e4f8664385953140f7, type: 3}
+  - {fileID: 21300000, guid: 8739ac4c871c44649a6a2326a62ab5ce, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Banderole_Level
+  - arrow
+  - Banderole_Level 1
+  - circle_stroke
+  - 9grid_orange
+  - 9grid_blue
+  - circle_gauge
+  - dollar_Logo
+  - Dollar_Green
+  m_RenderDataMap: {}
+  m_Tag: Win UI
+  m_IsVariant: 0
