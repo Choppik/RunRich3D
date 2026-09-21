@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 053edf35d7d65d84fb89f37748ce5331, type: 3}
+  m_Name: AppSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Settings.AppSettings
+  Language: ru
+  LocalizationData:
+    buttonUIData:
+      button_start: 
+      button_modes: 
+      button_other: 
+      button_auth: 
+      button_back_mainMenu: 
+      button_try_again: 
+      button_show_adv: 
+      button_leader_board: 
+      button_mod_non_stop: 
+      button_mod_challenge: 
+    commonTextUIData:
+      text_level: 
+      text_stage: 
+      text_info_auth: 
+      text_best_player: 
+      text_no_games: 
+      text_record: 
+      text_info_auth_for_lose: 
+      text_music: 
+      text_rules: 
+      text_language_ru: 
+      text_language_en: 
+      text_language_tr: 
+      text_language_de: 
+      text_language_be: 
+      text_info_mode_non_stop: 
+      text_info_mode_challenge: 

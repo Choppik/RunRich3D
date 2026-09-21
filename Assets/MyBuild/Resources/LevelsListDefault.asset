@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 090d1ab5d2cad7e499d4cbfc952cbd8b, type: 3}
+  m_Name: LevelsListDefault
+  m_EditorClassIdentifier: Assembly-CSharp::ButchersGames.LevelsList
+  randomizedLvls: 0
+  lvls:
+  - {fileID: 11400000, guid: e599ed7ebfde7d24dba6809564ecdfc4, type: 2}
+  - {fileID: 11400000, guid: 2f28923bacfa7f74da89ab3ea4ea32fc, type: 2}
+  - {fileID: 11400000, guid: cbcfb393ae34dd44e9d4d62f40aced11, type: 2}
+  - {fileID: 11400000, guid: 2aacf00f610f90a4aa9988ed27b4801d, type: 2}
+  - {fileID: 11400000, guid: d71819ffdaecc8b43a972011d4434c78, type: 2}

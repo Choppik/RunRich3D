@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc14e68bf67076f43ad3fa7309c30140, type: 3}
+  m_Name: GameSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Settings.GameSettings
+  LevelsList: {fileID: 11400000, guid: cc1d31c70deacd441ab2cd9e656f5109, type: 2}

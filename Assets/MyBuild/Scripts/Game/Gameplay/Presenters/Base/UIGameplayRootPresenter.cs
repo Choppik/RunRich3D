@@ -8,6 +8,5 @@ namespace MyBuild.Scripts.Game.Gameplay
     /// </summary>
     public class UIGameplayRootPresenter : UIRootPresenter
     {
-        public override string PathPrefabs => AppConsts.PathPrefabsGameplay;
     }
 }

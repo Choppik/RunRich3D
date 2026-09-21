@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: PrefabsModelsGroup
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: PrefabsModelsGroup
+  m_GUID: 339071c25c96b2f44ae9361a55993a15
+  m_SerializeEntries:
+  - m_GUID: 0546cfa62df07d54aaa64268036ecc06
+    m_Address: VariantContainerItem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c0d6bb5977cda54997955c5cd80464d
+    m_Address: Ground
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13de5c39d19e6674ca8a5a8299782224
+    m_Address: Door2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 181489a46e6f9d8418c17da29ad48801
+    m_Address: Trash
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1c56cf6f56506c8478d1c92e85b3e180
+    m_Address: VariantDoor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1f54df59eb9a28f43b14bbd8bee56d41
+    m_Address: Bench
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 201ec8248b7c30f4b9cfd9d5c1236fcc
+    m_Address: Car
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 327168ca0db50524a8c393a718a985fe
+    m_Address: Red_Carpet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3979ba8bc1abfcb449fd23997b17fa7d
+    m_Address: Door4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53471fcd5fa71a6438778f68805eb281
+    m_Address: Partying
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55c7af5b9dff4b6499362e12a3cf7aff
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a9712fbbd3011b4792e49cc029d5144
+    m_Address: Descent_Carpet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b02c228afe9de24d89a2f8a114db9e2
+    m_Address: VariantDollars
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a5849ced8eba8740858a2f2851e2102
+    m_Address: Door1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 829efd86b837470458dcb687d1d739ee
+    m_Address: Photographer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b553b171d2d75b46ac9cc9b5d18096c
+    m_Address: FinishElement1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aaec6da4557bb9d42a67ede2a405ae70
+    m_Address: Woter
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab268092185382a44b55bfb551c1d776
+    m_Address: Bottle.001
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b448ca348667da34fa5767e04e7b0d33
+    m_Address: Plant
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4e6f76ed5c2e644195a4a0ab5e4720d
+    m_Address: Door3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e11609b72f673384d9859e62752b9275
+    m_Address: Palmer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e600837aaa64b0748a4be9b6a585b8dd
+    m_Address: GroundRL
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8f23a440070b904e8acb92fd1362be5
+    m_Address: Bills
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9a0dbb08bc8d9241a0e27393d40ba3a
+    m_Address: Flag
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0a1111e157d8444ab3a070b6642584f
+    m_Address: Rich_Carpet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6f7d6fb8fbdf6b48997c52fdb10a390
+    m_Address: Schools
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc19aa35fb1f67349bd0d7c154756add
+    m_Address: Bottle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ed6a8084c081cb04dba667ded6900a69, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: d270e8d1ec9a400439fb4b41e5aee8af, type: 2}
+    - {fileID: 11400000, guid: 706efe3b21e0c404f98c94e23dff4d0b, type: 2}

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Reflection;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace MyBuild.Scripts.Utils.MVP.UI
 {
@@ -11,6 +13,7 @@ namespace MyBuild.Scripts.Utils.MVP.UI
         public virtual void Close()
         {
             // TODO: Здесь можно прописать анимацию закрытия окна.
+            Addressables.ReleaseInstance(gameObject);
             Destroy(gameObject);
         }
     }

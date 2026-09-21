@@ -3,7 +3,7 @@
 namespace MyBuild.Scripts.Utils
 {
     [Serializable]
-    public class LocalizationData
+    public class LocalizationData // Пример реализации локализации (не используется в данном случае)
     {
         public ButtonUIData buttonUIData; // Тексты кнопок.
         public CommonTextUIData commonTextUIData; // Просто тексты.

@@ -14,11 +14,10 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
     /// </summary>
     public class ScreenMainMenuPresenter : WindowPresenterBase
     {
-        public ScreenMainMenuPresenter(GameplayUIManager manager, ISettingsProvider settingsProvider, AudioManager audioManager)
+        public ScreenMainMenuPresenter(GameplayUIManager manager, ISettingsProvider settingsProvider)
         {
             _manager = manager;
             _settingsProvider = settingsProvider;
-            _audioManager = audioManager;
         }
 
         public override void BindWindow(IWindowBinder window)
@@ -31,26 +30,6 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
 
         private void BindSubscriptions()
         {
-            _compositeDisposable.Add(_settingsProvider.ChangeLangRequest.Subscribe(_ => UpdateTextUI()));
-        }
-
-        /// <summary>
-        /// Обновление текста в UI.
-        /// </summary>
-        private void UpdateTextUI()
-        {
-            var textRu = _settingsProvider.AppSettings.LocalizationData.commonTextUIData.text_language_ru;
-            var textEn = _settingsProvider.AppSettings.LocalizationData.commonTextUIData.text_language_en;
-            var textDe = _settingsProvider.AppSettings.LocalizationData.commonTextUIData.text_language_de;
-            var textBe = _settingsProvider.AppSettings.LocalizationData.commonTextUIData.text_language_be;
-            var textTh = _settingsProvider.AppSettings.LocalizationData.commonTextUIData.text_language_tr;
-            var listLanguage = new List<string>()
-            {
-                textRu,
-                textEn,
-            };
-
-            Binder.SetTextUI(listLanguage);
 
         }
 
@@ -65,7 +44,6 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
 
         private readonly GameplayUIManager _manager;
         private readonly ISettingsProvider _settingsProvider;
-        private readonly AudioManager _audioManager;
 
         // Все подписки.
         private readonly CompositeDisposable _compositeDisposable = new();

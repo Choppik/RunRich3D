@@ -28,13 +28,6 @@
 
         #endregion
 
-        #region Пути к ресурсам.
-
-        public const string PathPrefabsGameplay = "Prefabs/UI/Gameplay/";
-        public const string PathPrefabsRoot = "Prefabs/UI/Root/";
-
-        #endregion
-
         #region Обозначения локализации.
 
         public const string LocalizationRU = "ru";

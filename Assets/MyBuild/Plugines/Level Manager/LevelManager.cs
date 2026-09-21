@@ -19,7 +19,7 @@ namespace ButchersGames
         const string LastLevelIndex_PrefsKey = "Last Level Index";
         const string CurrentAttempt_PrefsKey = "Current Attempt";
 
-        public static int CurrentLevel { get { return (CompleteLevelCount < Default.Levels.Count ? Default.CurrentLevelIndex : CompleteLevelCount) + 1; } set { PlayerPrefs.GetInt(CurrentLevel_PrefsKey, value); } } // TODO: Возможно ошибка
+        public static int CurrentLevel { get { return (CompleteLevelCount < Default.Levels.Count ? Default.CurrentLevelIndex : CompleteLevelCount) + 1; } set { PlayerPrefs.SetInt(CurrentLevel_PrefsKey, value); } }
         public static int CompleteLevelCount { get { return PlayerPrefs.GetInt(CompleteLevelCount_PrefsKey); } set { PlayerPrefs.SetInt(CompleteLevelCount_PrefsKey, value); } }
         public static int LastLevelIndex { get { return PlayerPrefs.GetInt(LastLevelIndex_PrefsKey); } set { PlayerPrefs.SetInt(LastLevelIndex_PrefsKey, value); } }
         public static int CurrentAttempt { get { return PlayerPrefs.GetInt(CurrentAttempt_PrefsKey); } set { PlayerPrefs.SetInt(CurrentAttempt_PrefsKey, value); } }

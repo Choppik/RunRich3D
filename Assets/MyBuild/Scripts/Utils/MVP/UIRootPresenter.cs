@@ -25,7 +25,7 @@ namespace MyBuild.Scripts.Utils.MVP.UI
         /// Открытие основного окна на сцене.
         /// </summary>
         /// <param name="presenter">Презентер окна.</param>
-        public void OpenScreen(WindowPresenterBase presenter)
+        public async void OpenScreen(WindowPresenterBase presenter)
         {
             if (!CheckPresenter(presenter))
             {
@@ -34,8 +34,8 @@ namespace MyBuild.Scripts.Utils.MVP.UI
 
             _openedScreen.Value?.Dispose();
 
-            var path = $"{PathPrefabs}{presenter.Name}";
-            var binder = _rootBinder.OpenScreen(path);
+            var path = $"{presenter.Name}";
+            var binder = await _rootBinder.OpenScreenAsync(path);
             _openedScreen.OnNext(presenter);
             presenter.BindWindow(binder);
         }
@@ -44,7 +44,7 @@ namespace MyBuild.Scripts.Utils.MVP.UI
         /// Открытие вспомогательного окна на сцене.
         /// </summary>
         /// <param name="presenter">Презентер окна.</param>
-        public void OpenPopup(WindowPresenterBase presenter)
+        public async void OpenPopup(WindowPresenterBase presenter)
         {
             if (!CheckPresenter(presenter))
             {
@@ -56,8 +56,8 @@ namespace MyBuild.Scripts.Utils.MVP.UI
                 return;
             }
 
-            var path = $"{PathPrefabs}{presenter.Name}";
-            var binder = _rootBinder.OpenPopup(path);
+            var path = $"{presenter.Name}";
+            var binder = await _rootBinder.OpenPopupAsync(path);
             var subscription = presenter.CloseRequested.Subscribe(ClosePopup);
             _popupsSubscriptions.Add(presenter, subscription);
             _openedPopups.Add(presenter);
@@ -125,7 +125,7 @@ namespace MyBuild.Scripts.Utils.MVP.UI
             return true;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             CloseAllPopups();
             _openedScreen.Value?.Dispose();

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ButchersGames;
+using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Settings
 {
@@ -8,6 +9,6 @@ namespace MyBuild.Scripts.Game.Settings
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Game Settings/New Game Settings")]
     public class GameSettings : ScriptableObject
     {
-        public GameModeSettings GameModeSettings;
+        public LevelsList LevelsList;
     }
 }

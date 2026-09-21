@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3762148588219540700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2199882200293490800}
+  - component: {fileID: 3651345338579209072}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2199882200293490800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3762148588219540700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3651345338579209072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3762148588219540700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e800392e4118c64eb4531b22125ab7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  entries:
+  - key: 
+    address: Ground
+    fallbackPrefab: {fileID: 0}
+    initial: 5
+  - key: 
+    address: GroundRL
+    fallbackPrefab: {fileID: 0}
+    initial: 2
+  - key: 
+    address: Door1
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Door2
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Door3
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Door4
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: VariantConteinerItem
+    fallbackPrefab: {fileID: 0}
+    initial: 20
+  - key: 
+    address: Bench
+    fallbackPrefab: {fileID: 0}
+    initial: 2
+  - key: 
+    address: Plant
+    fallbackPrefab: {fileID: 0}
+    initial: 5
+  - key: 
+    address: Bottle.001
+    fallbackPrefab: {fileID: 0}
+    initial: 2
+  - key: 
+    address: Descent_Carpet
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Red_Carpet
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Rich_Carpet
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: VariantDollars
+    fallbackPrefab: {fileID: 0}
+    initial: 20
+  - key: 
+    address: VariantDoor
+    fallbackPrefab: {fileID: 0}
+    initial: 2
+  - key: 
+    address: Palmer
+    fallbackPrefab: {fileID: 0}
+    initial: 5
+  - key: 
+    address: Shools
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Water
+    fallbackPrefab: {fileID: 0}
+    initial: 1
+  - key: 
+    address: Trash
+    fallbackPrefab: {fileID: 0}
+    initial: 5
+  - key: 
+    address: Partyling
+    fallbackPrefab: {fileID: 0}
+    initial: 1

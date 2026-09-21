@@ -19,21 +19,15 @@ namespace MyBuild.Scripts.Game.Settings
         AppSettings AppSettings { get; }
 
         /// <summary>
+        /// Асихронная инициализация данных приложения.
+        /// </summary>
+        Task InitializeAsync();
+
+        /// <summary>
         /// Асихронная загрузка данных игры.
         /// </summary>
         /// <returns>Настройки игры.</returns>
         /// <remarks>Можно реализовать загрузку данных откуда угодно.</remarks>
         Task<GameSettings> LoadGameSettings();
-
-        /// <summary>
-        /// Установка локализации.
-        /// </summary>
-        /// <param name="language">Выбранный язык локализации.</param>
-        void SetLocalization(string language);
-
-        /// <summary>
-        /// Событие изменения языка.
-        /// </summary>
-        Observable<Unit> ChangeLangRequest { get; }
     }
 }

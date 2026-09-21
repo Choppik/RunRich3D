@@ -2,5 +2,7 @@
 
 namespace MyBuild.Scripts.Game.Gameplay.Binderes
 {
-    public class UIGameplayRootBinder : UIRootBinder { }
+    public class UIGameplayRootBinder : UIRootBinder 
+    {
+    }
 }

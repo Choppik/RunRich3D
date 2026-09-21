@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SpriteAtlasGroup
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: SpriteAtlasGroup
+  m_GUID: 5174f10e21190e54195f46513c1c3e51
+  m_SerializeEntries:
+  - m_GUID: 55d33254db82d6545887f08699e1f152
+    m_Address: Win UI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b12be3fc4b178c242b6d3c9e9043f14d
+    m_Address: Main UI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b960987b0653637449ff0bcb8b59ca6d
+    m_Address: Run UI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe3c35d23ad262c4a87ac55741e63557
+    m_Address: Images Run
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ed6a8084c081cb04dba667ded6900a69, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b9cb42e925ebaaa4e8e0530b42a5dea5, type: 2}
+    - {fileID: 11400000, guid: 6acce12804f6ae5468c1950a4ef90e82, type: 2}

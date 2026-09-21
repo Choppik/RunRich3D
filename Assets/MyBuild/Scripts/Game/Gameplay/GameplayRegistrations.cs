@@ -1,6 +1,6 @@
 ﻿using DI;
-using MyBuild.Scripts.Game.State.Cmd;
-using MyBuild.Scripts.Game.State.Providers;
+using MyBuild.Scripts.Utils.LevelGenerate;
+using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Gameplay
 {
@@ -15,15 +15,31 @@ namespace MyBuild.Scripts.Game.Gameplay
         /// <param name="container">Контейнер, содержащий компоненты уровня приложения.</param>
         public static void Register(DIContainer container)
         {
-            var gameStateProvider = container.Resolve<IGameStateProvider>();
-            var gameState = gameStateProvider.GameState;
+            // Регистрируем PoolManager как синглтон
+            // Он будет создан через Addressables в EntryPoint
+            container.RegisterFactory<PoolManager>(resolver =>
+            {
+                // Возвращаем уже созданный экземпляр (см. EntryPoint ниже)
+                return resolver.Resolve<PoolManagerInstanceHolder>().Instance;
+            }).AsSingle();
 
-            var cmd = new CommandProcessor(gameStateProvider);
-            container.RegisterInstance<ICommandProcessor>(cmd);
+            // ScoreManager — синглтон
+            container.RegisterFactory<ScoreManager>(resolver =>
+            {
+                var go = new GameObject("[ScoreManager]");
+                var sm = go.AddComponent<ScoreManager>();
+                Object.DontDestroyOnLoad(go);
+                return sm;
+            }).AsSingle();
 
-            // Регистрируем обработчики команд.
-
-            // Регистрируем сервисы.
+            // QualityManager — синглтон
+            container.RegisterFactory<QualityManager>(resolver =>
+            {
+                var go = new GameObject("[QualityManager]");
+                var qm = go.AddComponent<QualityManager>();
+                Object.DontDestroyOnLoad(go);
+                return qm;
+            }).AsSingle();
         }
     }
 }

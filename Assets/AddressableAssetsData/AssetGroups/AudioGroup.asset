@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: AudioGroup
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: AudioGroup
+  m_GUID: a69e870458587944780311abe7d556b0
+  m_SerializeEntries:
+  - m_GUID: 00cade9eca88fef498b9835567829ceb
+    m_Address: Audio/coin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2fb08f893b19df9488e6499ef82aaa77
+    m_Address: Audio/RemoveMoney
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c98341e416762242addb3c1ac11b7d0
+    m_Address: Audio/collect_coin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4bc0e7f9dee58084387b80d52a1cd834
+    m_Address: Audio/click
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4df1f7cf8fd47694ba4b25308f9ac7e4
+    m_Address: Audio/SFX_Footstep_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e57d44c0652d5a4badc5a846ed2bc0b
+    m_Address: Audio/shortcutrun_sfx_jingle_victory
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5bc0713a1ac0daa45a97a379c8f378eb
+    m_Address: Audio/App Error
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8388a962678b62f49ae8b2ddcab5bba9
+    m_Address: Audio/shortcutrun_sfx_joueur_bonus_multiplier_x01_to_x05_variation01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8525dbcfc148d08498712c3e4c3c1842
+    m_Address: Audio/shortcutrun_sfx_joueur_bonus_multiplier_x15
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 886e4e9fab66d7f468266b1b932c4486
+    m_Address: Audio/HighHeels_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e94a9de5d46c4c419ec357989b981b1
+    m_Address: Audio/SFX_Footstep_5
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8eb2a1f92ac870c47b1409d138db7334
+    m_Address: Audio/SFX_Footstep_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9375ce0041ed71f4db08e578c2003dd9
+    m_Address: Audio/HighHeels_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a8e6f9d159566041b74f12d0599c06d
+    m_Address: Audio/shortcutrun_sfx_joueur_boost_pont_V3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad5bbb5f08941dd4ba58090a7e8a8500
+    m_Address: Audio/shortcutrun_sfx_envir_boost_champignon_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af69c4031833c1a4086be286ac690461
+    m_Address: Audio/WinJackpot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b69fccd8413b15e4aa2ad17aebe89f9b
+    m_Address: Audio/SFX_Footstep_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b72d3b9d3b1e64c49ba32d6c5456145a
+    m_Address: Audio/photograph
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6301acf6d992a34090c7c61a87fbaaa
+    m_Address: Audio/shortcutrun_sfx_joueur_bonus_multiplier_x05_to_x10_variation01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c76adda967aedf847918f76bc36ffd58
+    m_Address: Audio/Aou
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd2c78f39bddea246868728c7bafbfe3
+    m_Address: Audio/SFX_Footstep_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb33115d0549ed14b9f75bd1c557d91f
+    m_Address: Audio/shortcutrun_sfx_joueur_bonus_multiplier_x10_to_x14_variation01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe36c711afd5a054996db960fe40f199
+    m_Address: Audio/knockemall_sfx_enemy_robot_fall02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ed6a8084c081cb04dba667ded6900a69, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: bc941be6330527b4dbd435ae5a99fca0, type: 2}
+    - {fileID: 11400000, guid: fb0a416535572bf4090671877190dff1, type: 2}
