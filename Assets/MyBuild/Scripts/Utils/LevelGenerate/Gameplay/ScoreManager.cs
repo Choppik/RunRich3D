@@ -14,19 +14,15 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         public static ScoreManager Instance { get; private set; }
 
         [Header("Score")]
-        public int score = 0;
-        public int maxScore = 100;
+        [SerializeField] private int score = 0;
+        [SerializeField] private int maxScore = 100;
 
         [Header("Scale (для дверей и мешей)")]
-        [Range(0f, 1f)] public float scale = 0f;
-
-        [Header("UI References (заполнять программно или в инспекторе)")]
-        public Text scoreText;
-        public Slider scaleSlider;
+        [Range(0f, 1f)] [SerializeField] private float scale = 0f;
 
         [Header("Thresholds (для QualityManager и MeshSwapper)")]
-        public float[] meshThresholds = { 0f, 0.3f, 0.6f, 0.9f }; // 4 порога = 4 меша
-        public float[] qualityThresholds = { 0f, 0.4f, 0.7f };    // 3 тира
+        [SerializeField] private float[] meshThresholds = { 0f, 0.3f, 0.6f, 0.9f }; // 4 порога = 4 меша
+        [SerializeField] private float[] qualityThresholds = { 0f, 0.4f, 0.7f };    // 3 тира
 
         // События
         public System.Action<int> OnScoreChanged;
@@ -110,8 +106,8 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
         void UpdateUI()
         {
-            if (scoreText != null) scoreText.text = score.ToString();
-            if (scaleSlider != null) scaleSlider.value = scale;
+            //if (scoreText != null) scoreText.text = score.ToString();
+            //if (scaleSlider != null) scaleSlider.value = scale;
         }
 
         // --- Концовки ---

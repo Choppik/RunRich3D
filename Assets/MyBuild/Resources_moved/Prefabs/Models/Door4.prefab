@@ -248,6 +248,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3785110795636787974}
+  - component: {fileID: 2071389143895942565}
+  - component: {fileID: 2531700320067585517}
   m_Layer: 0
   m_Name: Door4
   m_TagString: Untagged
@@ -272,6 +274,50 @@ Transform:
   - {fileID: 7988782925038019537}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2071389143895942565
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246495523514230958}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 1.5}
+  m_Center: {x: 0, y: 1, z: 0.8}
+--- !u!114 &2531700320067585517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246495523514230958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6584539fac0b4468a8bb93ffe77752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.DoorSegment
+  entryPoint: {fileID: 3785110795636787974}
+  exitPoint: {fileID: 3785110795636787974}
+  type: 1
+  tire: 4
+  requiredScale: 0.3
+  leftDoor: {fileID: 4759434442787578523}
+  rightDoor: {fileID: 5131217432277622999}
+  doorTrigger: {fileID: 2071389143895942565}
+  openAngle: 90
+  openSpeed: 2
+  isFinalDoor: 1
 --- !u!1001 &1368922544840287102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -348,5 +394,15 @@ PrefabInstance:
 --- !u!4 &1546382497670481045 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 868ede097bc2da04ebd1e837dc9413da, type: 3}
+  m_PrefabInstance: {fileID: 1368922544840287102}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4759434442787578523 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5833159485377888741, guid: 868ede097bc2da04ebd1e837dc9413da, type: 3}
+  m_PrefabInstance: {fileID: 1368922544840287102}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5131217432277622999 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6181996277145371561, guid: 868ede097bc2da04ebd1e837dc9413da, type: 3}
   m_PrefabInstance: {fileID: 1368922544840287102}
   m_PrefabAsset: {fileID: 0}

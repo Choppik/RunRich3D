@@ -30,29 +30,30 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
         IEnumerator PlaceCoroutine()
         {
-            var road = GetComponent<RoadSegment>();
-            if (road == null || road.decorationPoints == null) yield break;
-
-            for (int i = 0; i < road.decorationPoints.Length; i++)
-            {
-                if (Random.value > placeChance) continue;
-
-                string addr = randomDecor
-                    ? decorationAddresses[Random.Range(0, decorationAddresses.Length)]
-                    : decorationAddresses[i % decorationAddresses.Length];
-
-                var handle = Addressables.LoadAssetAsync<GameObject>(addr);
-                yield return handle;
-
-                if (handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
-                {
-                    _handles.Add(handle);
-                    var obj = Instantiate(handle.Result, road.decorationPoints[i]);
-                    obj.transform.localPosition = Vector3.zero;
-                    obj.transform.localRotation = Quaternion.identity;
-                    _placed.Add(obj);
-                }
-            }
+            //var road = GetComponent<RoadSegment>();
+            //if (road == null || road.decorationPoints == null) yield break;
+            //
+            //for (int i = 0; i < road.decorationPoints.Length; i++)
+            //{
+            //    if (Random.value > placeChance) continue;
+            //
+            //    string addr = randomDecor
+            //        ? decorationAddresses[Random.Range(0, decorationAddresses.Length)]
+            //        : decorationAddresses[i % decorationAddresses.Length];
+            //
+            //    var handle = Addressables.LoadAssetAsync<GameObject>(addr);
+            //    yield return handle;
+            //
+            //    if (handle.Status == AsyncOperationStatus.Succeeded && handle.Result != null)
+            //    {
+            //        _handles.Add(handle);
+            //        //var obj = Instantiate(handle.Result, road.decorationPoints[i]);
+            //        //obj.transform.localPosition = Vector3.zero;
+            //        //obj.transform.localRotation = Quaternion.identity;
+            //        //_placed.Add(obj);
+            //    }
+            //}
+            yield return new WaitForEndOfFrame();
         }
 
         public void ClearDecorations()

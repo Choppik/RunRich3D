@@ -15,16 +15,8 @@ namespace MyBuild.Scripts.Game.Gameplay
         /// <param name="container">Контейнер, содержащий компоненты уровня приложения.</param>
         public static void Register(DIContainer container)
         {
-            // Регистрируем PoolManager как синглтон
-            // Он будет создан через Addressables в EntryPoint
-            container.RegisterFactory<PoolManager>(resolver =>
-            {
-                // Возвращаем уже созданный экземпляр (см. EntryPoint ниже)
-                return resolver.Resolve<PoolManagerInstanceHolder>().Instance;
-            }).AsSingle();
-
             // ScoreManager — синглтон
-            container.RegisterFactory<ScoreManager>(resolver =>
+            container.RegisterFactory(resolver =>
             {
                 var go = new GameObject("[ScoreManager]");
                 var sm = go.AddComponent<ScoreManager>();
@@ -33,7 +25,7 @@ namespace MyBuild.Scripts.Game.Gameplay
             }).AsSingle();
 
             // QualityManager — синглтон
-            container.RegisterFactory<QualityManager>(resolver =>
+            container.RegisterFactory(resolver =>
             {
                 var go = new GameObject("[QualityManager]");
                 var qm = go.AddComponent<QualityManager>();

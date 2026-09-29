@@ -1,9 +1,10 @@
 ﻿using DI;
-using MyBuild.Scripts.Utils.MVP.UI;
+using MyBuild.Scripts.Game.Gameplay.Presenters;
 using MyBuild.Scripts.Game.GameRoot;
 using MyBuild.Scripts.Game.Settings;
 using MyBuild.Scripts.Game.State.Providers;
-using MyBuild.Scripts.Game.Gameplay.Presenters;
+using MyBuild.Scripts.Utils;
+using MyBuild.Scripts.Utils.MVP.UI;
 
 namespace MyBuild.Scripts.Game.Gameplay.Managers
 {

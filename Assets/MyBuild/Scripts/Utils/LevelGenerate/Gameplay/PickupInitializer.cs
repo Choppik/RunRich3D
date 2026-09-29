@@ -96,8 +96,8 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
             // Возвращаем в пул
             gameObject.SetActive(false);
-            var obj = PoolManager.Instance.Spawn(gameObject);
-            PoolManager.Instance.Despawn(obj);
+            //var obj = PoolManager.Instance.Spawn(gameObject);
+            //PoolManager.Instance.Despawn(obj);
         }
     }
 

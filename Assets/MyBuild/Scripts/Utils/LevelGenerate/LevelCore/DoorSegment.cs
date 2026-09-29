@@ -7,22 +7,20 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
     /// </summary>
     public class DoorSegment : SegmentBase
     {
-        [Header("Door")]
-        public int tier = 0;
-
         [Tooltip("Минимальная шкала (0..1), чтобы дверь открылась")]
-        public float requiredScale = 0.3f;
+        [SerializeField] private float requiredScale = 0.3f;
 
         [Tooltip("Аниматор двери (или Transform для вращения/сдвига)")]
-        public Transform leftDoor;
-        public Transform rightDoor;
+        [SerializeField] private Transform leftDoor;
+        [SerializeField] private Transform rightDoor;
 
         [Tooltip("Триггер перед дверью")]
-        public Collider doorTrigger;
+        [SerializeField] private Collider doorTrigger;
 
         [Header("Visuals")]
-        public float openAngle = 90f;
-        public float openSpeed = 2f;
+        [SerializeField] private float openAngle = 90f;
+        [SerializeField] private float openSpeed = 2f;
+        [SerializeField] private bool isFinalDoor = false;
 
         private bool _isOpen = false;
         private bool _playerReached = false;
@@ -31,12 +29,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         private Quaternion _leftOpen;
         private Quaternion _rightOpen;
 
-        [HideInInspector] public bool IsFinalDoor = false;
-
-        void Awake()
-        {
-            type = SegmentType.Door;
-        }
+        public bool IsFinalDoor => isFinalDoor;
 
         void Start()
         {
@@ -68,7 +61,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
                 Debug.Log($"[DoorSegment] Дверь открыта! Шкала: {scale:F2}, нужно: {requiredScale:F2}");
 
                 // Если финальная дверь — победа
-                if (IsFinalDoor)
+                if (isFinalDoor)
                 {
                     ScoreManager.Instance?.OnFinalDoorOpened();
                 }
@@ -92,13 +85,9 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             }
         }
 
-        public void SetTier(int newTier)
-        {
-            tier = Mathf.Clamp(newTier, 0, 2);
-            // Смена визуала двери по тиру
-        }
-
-        /// <summary>Может ли игрок пройти (дверь открыта)?</summary>
+        /// <summary>
+        /// Может ли игрок пройти (дверь открыта)?
+        /// </summary>
         public bool IsOpen => _isOpen;
     }
 }

@@ -116,7 +116,6 @@ namespace MyBuild.Scripts.Game
             _uiRoot.ShowLoadingScreen();
 
             yield return _addressablesSceneLoader.LoadSceneCoroutine(Scenes.GAMEPLAY);
-            yield return new WaitForSeconds(1);
 
             //var isGameStateLoaded = false;
             //_rootContainer.Resolve<IGameStateProvider>().LoadGameState().Subscribe(_ => isGameStateLoaded = true);
@@ -126,7 +125,7 @@ namespace MyBuild.Scripts.Game
 
             var gameplayContainer = _cachedSceneContainer = new DIContainer(_rootContainer);
 
-            sceneEntryPoint.Run(gameplayContainer);
+            yield return sceneEntryPoint.Run(gameplayContainer); // Ждем, пока все загрузится.
 
             _uiRoot.HideLoadingScreen();
         }

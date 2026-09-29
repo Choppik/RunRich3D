@@ -363,4 +363,9 @@ public class CurvedOrPlaneRoadGenerator : MonoBehaviour
         if (!Application.isPlaying) Build();
     }
 #endif
+
+    private void Start()
+    {
+        Build();
+    }
 }

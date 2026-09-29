@@ -9,7 +9,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
     {
         public static QualityManager Instance { get; private set; }
 
-        [Range(0, 2)] public int roadTier = 0;
+        [Range(0, 2)] public int roadTier = 0; // TODO: Изменить на изменение типа
         [Range(0, 2)] public int doorTier = 0;
 
         private LevelGenerator _levelGen;
@@ -36,8 +36,8 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
         void ApplyTiers()
         {
-            if (_levelGen != null)
-                _levelGen.ApplyTiers(roadTier, doorTier);
+            //if (_levelGen != null)
+            //    _levelGen.ApplyTiers(roadTier, doorTier);
         }
     }
 }

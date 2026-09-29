@@ -1,354 +1,387 @@
-﻿using System.Collections;
+﻿using MyBuild.Scripts.Game.Common;
+using MyBuild.Scripts.Utils.LevelGenerate;
+using R3;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+public class LevelGenerator : MonoBehaviour
 {
-    /// <summary>
-    /// Генератор уровня. Собирает цепочку: прямые → поворот/дверь → прямые → ...
-    /// Подряд могут идти только прямые. Все префабы грузятся через Addressables.
-    /// </summary>
-    public class LevelGenerator : MonoBehaviour
+    [Header("Mode")]
+    [SerializeField] private GenMode mode = GenMode.Fixed;
+
+    [Header("Counts")]
+    [SerializeField] private int straightCount = 6;
+    [SerializeField] private int turnCount = 3;
+    [SerializeField] private int doorCount = 4;
+
+    [Header("Tiers")]
+    [SerializeField] private TierType currentRoadTier = TierType.Casual;
+    [SerializeField] private TierType currentDoorTier = TierType.Poor;
+    [SerializeField] private TierType currentPlayerTier = TierType.Casual;
+
+    [Header("Fixed Sequence (S=прямая, T=поворот, D=дверь)")]
+    [SerializeField] private string fixedSequence = "STSTSTST";
+
+    [Header("Streaming Window")]
+    [Tooltip("Сколько сегментов держать впереди игрока")]
+    [SerializeField] private int windowAhead = 4;
+    [Tooltip("Сколько сегментов держать позади игрока")]
+    [SerializeField] private int windowBehind = 1;
+
+    public bool IsGenerationComplete { get; private set; }
+
+    private struct ActiveSeg
     {
-        public enum GenMode { Random, Fixed }
+        public int index;
+        public GameObject obj;
+        public SegmentBase seg;
+    }
 
-        [Header("Mode")]
-        public GenMode mode = GenMode.Random;
+    private PoolManager _poolManager;
+    private List<TypeSequence> _sequence;
+    private readonly LinkedList<ActiveSeg> _active = new();
+    private Vector3 _nextSpawnPos;
+    private Quaternion _nextSpawnRot;
+    private int _playerSegmentIndex = -1;
+    private GameObject _playerInstance;
 
-        [Header("Counts")]
-        public int straightCount = 6;
-        public int turnCount = 2;
-        public int doorCount = 3;
+    // Все подписки.
+    private readonly CompositeDisposable _compositeDisposable = new();
 
-        [Header("Addressable Keys")]
-        public string[] straightRoadAddresses = { "roads/straight_t0", "roads/straight_t1", "roads/straight_t2" };
-        public string[] turnRoadAddresses = { "roads/turn_t0", "roads/turn_t1", "roads/turn_t2" };
-        public string[] doorAddresses = { "doors/door_t0", "doors/door_t1", "doors/door_t2" };
-        public string endTriggerAddress = "triggers/end_trigger";
-        public string playerAddress = "player/player_default";
-
-        [Header("Tiers (управляется QualityManager)")]
-        [Range(0, 2)] public int currentRoadTier = 0;
-        [Range(0, 2)] public int currentDoorTier = 0;
-
-        [Header("Fixed Sequence (S=прямая, T=поворот, D=дверь)")]
-        public string fixedSequence = "SSDSTSD";
-        public bool IsGenerationComplete { get; private set; } = false;
-        // Состояние
-        private readonly List<GameObject> _spawned = new();
-        private readonly List<AsyncOperationHandle> _handles = new();
-        private Vector3 _nextPos;
-        private Quaternion _nextRot;
-        private RoadSegment _firstRoad;
-        private RoadSegment _lastRoad;
-
-        private enum Seq { Straight, Turn, Door }
-
-        [Header("Auto-start")]
-        public bool autoStart = true;
-
-        void Start()
+    private void Start()
+    {
+        if (PoolManager.Instance == null)
         {
-            if (autoStart)
-                StartCoroutine(Generate());
+            Debug.LogWarning("[PoolManager] не создан!");
+        }
+        else
+        {
+            _poolManager = PoolManager.Instance;
         }
 
-        /// <summary>Отключает авто-старт. Вызвать ДО Start().</summary>
-        public void DisableAutoStart()
+        StartCoroutine(Generate());
+    }
+
+    /// <summary>
+    /// Генерация уровня.
+    /// </summary>
+    /// <returns>Сгенерированный уровень.</returns>
+    private IEnumerator Generate()
+    {
+        _sequence = BuildSequence();
+
+        _nextSpawnPos = transform.position;
+        _nextSpawnRot = transform.rotation;
+
+        int initialCount = Mathf.Min(windowAhead + 1, _sequence.Count);
+        for (int i = 0; i < initialCount; i++)
         {
-            autoStart = false;
+            SpawnSegment(i);
+            yield return null; // один кадр между спавнами — плавный старт
         }
 
-        /// <summary>Запускает генерацию вручную.</summary>
-        public void StartGeneration()
+        // 4. Spawn player
+        yield return SpawnPlayer();
+
+        IsGenerationComplete = true;
+        Debug.Log($"[LevelGenerator] Стриминг запущен: {_sequence.Count} сегментов в очереди, {_active.Count} активно.");
+    }
+
+    /// <summary>
+    /// Сборка последовательности уровня.
+    /// </summary>
+    /// <returns>Последовательность уровня.</returns>
+    private List<TypeSequence> BuildSequence()
+    {
+        var seq = new List<TypeSequence>();
+
+        if (mode == GenMode.Fixed && !string.IsNullOrEmpty(fixedSequence))
         {
-            StartCoroutine(Generate());
-        }
-
-        /// <summary>Ручной запуск генерации. Вызвать из презентера.</summary>
-        public Task GenerateLevelAsync()
-        {
-            autoStart = false; // отключаем авто-старт
-            return Task.Run(async () =>
+            foreach (char c in fixedSequence.ToUpper())
             {
-                // Корутина не запускается из Task, поэтому используем
-                // другой подход — просто запускаем корутину
-            });
-        }
-
-        IEnumerator Generate()
-        {
-            _nextPos = transform.position;
-            _nextRot = transform.rotation;
-
-            List<Seq> sequence = BuildSequence();
-            int doorIndex = 0;
-            int totalDoors = 0;
-
-            // Считаем двери в последовательности
-            foreach (var s in sequence)
-                if (s == Seq.Door) totalDoors++;
-
-            for (int i = 0; i < sequence.Count; i++)
-            {
-                switch (sequence[i])
-                {
-                    case Seq.Straight:
-                        yield return SpawnSegment(
-                            straightRoadAddresses[currentRoadTier],
-                            seg => { var r = seg.GetComponent<RoadSegment>(); r.shape = RoadSegment.RoadShape.Straight; },
-                            isDoor: false);
-                        break;
-
-                    case Seq.Turn:
-                        yield return SpawnSegment(
-                            turnRoadAddresses[currentRoadTier],
-                            seg => { var r = seg.GetComponent<RoadSegment>(); r.shape = RoadSegment.RoadShape.Turn; },
-                            isDoor: false);
-                        break;
-
-                    case Seq.Door:
-                        bool isFinal = (doorIndex == totalDoors - 1);
-                        yield return SpawnSegment(
-                            doorAddresses[currentDoorTier],
-                            seg =>
-                            {
-                                var d = seg.GetComponent<DoorSegment>();
-                                if (d != null) d.IsFinalDoor = isFinal;
-                            },
-                            isDoor: true);
-                        doorIndex++;
-                        break;
-                }
+                if (c == 'S') seq.Add(TypeSequence.Straight);
+                else if (c == 'T') seq.Add(TypeSequence.Turn);
+                else if (c == 'D') seq.Add(TypeSequence.Door);
             }
-
-            // EndTrigger после последней дороги
-            if (_lastRoad != null)
-            {
-                yield return SpawnEndTrigger();
-            }
-
-            // Игрок
-            yield return SpawnPlayer();
-
-            // Уведомляем QualityManager
-            QualityManager.Instance?.OnLevelGenerated(this);
-
-            Debug.Log($"[LevelGenerator] Готово: {_spawned.Count} сегментов.");
-            IsGenerationComplete = true;
-
-            Debug.Log($"[LevelGenerator] Готово: {_spawned.Count} сегментов, {totalDoors} дверей.");
-        }
-
-        // --- Последовательность ---
-
-        List<Seq> BuildSequence()
-        {
-            var seq = new List<Seq>();
-
-            if (mode == GenMode.Fixed && !string.IsNullOrEmpty(fixedSequence))
-            {
-                foreach (char c in fixedSequence.ToUpper())
-                {
-                    if (c == 'S') seq.Add(Seq.Straight);
-                    else if (c == 'T') seq.Add(Seq.Turn);
-                    else if (c == 'D') seq.Add(Seq.Door);
-                }
-                return seq;
-            }
-
-            int sLeft = straightCount, tLeft = turnCount, dLeft = doorCount;
-
-            // Первая — всегда прямая
-            if (sLeft > 0) { seq.Add(Seq.Straight); sLeft--; }
-
-            while (sLeft > 0 || tLeft > 0 || dLeft > 0)
-            {
-                Seq last = seq[seq.Count - 1];
-                var opts = new List<Seq>();
-
-                if (sLeft > 0) opts.Add(Seq.Straight);
-                if (tLeft > 0 && last != Seq.Turn && last != Seq.Door) opts.Add(Seq.Turn);
-                if (dLeft > 0 && last != Seq.Door && last != Seq.Turn) opts.Add(Seq.Door);
-
-                if (opts.Count == 0) break;
-
-                Seq pick = opts[Random.Range(0, opts.Count)];
-                seq.Add(pick);
-
-                if (pick == Seq.Straight) sLeft--;
-                else if (pick == Seq.Turn) tLeft--;
-                else if (pick == Seq.Door) dLeft--;
-            }
-
-            // Гарантируем дверь в конце
-            if (seq.Count > 0 && seq[^1] != Seq.Door)
-            {
-                if (sLeft > 0) seq.Add(Seq.Straight);
-                seq.Add(Seq.Door);
-            }
-
+            seq.Add(TypeSequence.End);
             return seq;
         }
 
-        // --- Спавн одного сегмента ---
+        int sLeft = straightCount, tLeft = turnCount, dLeft = doorCount;
 
-        IEnumerator SpawnSegment(string address, System.Action<GameObject> onSpawned, bool isDoor)
+        // Первая — всегда прямая
+        if (sLeft > 0) { seq.Add(TypeSequence.Straight); sLeft--; }
+
+        while (sLeft > 0 || tLeft > 0 || dLeft > 0)
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>(address);
-            yield return handle;
+            TypeSequence last = seq[^1];
+            var opts = new List<TypeSequence>();
 
-            if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
-            {
-                Debug.LogError($"[LevelGenerator] Не удалось загрузить '{address}'");
-                yield break;
-            }
+            if (sLeft > 0) opts.Add(TypeSequence.Straight);
+            if (tLeft > 0 && last != TypeSequence.Turn && last != TypeSequence.Door) opts.Add(TypeSequence.Turn);
+            if (dLeft > 0 && last != TypeSequence.Door && last != TypeSequence.Turn) opts.Add(TypeSequence.Door);
 
-            _handles.Add(handle);
-            var prefab = handle.Result;
+            if (opts.Count == 0) break;
 
-            var obj = Instantiate(prefab, _nextPos, _nextRot, transform);
-            _spawned.Add(obj);
+            TypeSequence pick = opts[Random.Range(0, opts.Count)];
+            seq.Add(pick);
 
-            // Выравниваем по entry point
-            var seg = obj.GetComponent<SegmentBase>();
-            if (seg != null)
-            {
-                seg.AlignEntryTo(_nextPos, _nextRot);
-                seg.GetExitData(out _nextPos, out _nextRot);
-            }
-
-            // Связываем дорогу с предыдущей дверью и наоборот
-            if (!isDoor)
-            {
-                var road = obj.GetComponent<RoadSegment>();
-                if (road != null)
-                {
-                    if (_firstRoad == null) _firstRoad = road;
-                    _lastRoad = road;
-
-                    // Добавляем PickupSpawner и DecorationPlacer программно
-                    if (road.GetComponent<PickupSpawner>() == null)
-                    {
-                        var spawner = road.gameObject.AddComponent<PickupSpawner>();
-                        // Настройка спавнера будет через QualityManager/ScoreManager
-                    }
-                    if (road.GetComponent<DecorationPlacer>() == null)
-                    {
-                        road.gameObject.AddComponent<DecorationPlacer>();
-                    }
-                }
-            }
-
-            onSpawned?.Invoke(obj);
+            if (pick == TypeSequence.Straight) sLeft--;
+            else if (pick == TypeSequence.Turn) tLeft--;
+            else if (pick == TypeSequence.Door) dLeft--;
         }
 
-        IEnumerator SpawnEndTrigger()
+        // Дверь в конце + EndTrigger
+        if (seq.Count > 0 && seq[^1] != TypeSequence.Door)
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>(endTriggerAddress);
-            yield return handle;
+            if (sLeft > 0) seq.Add(TypeSequence.Straight);
+            seq.Add(TypeSequence.Door);
+        }
+        seq.Add(TypeSequence.End);
 
-            if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
-            {
-                Debug.LogWarning("[LevelGenerator] EndTrigger не загружен, пропускаем.");
-                yield break;
-            }
+        return seq;
+    }
 
-            _handles.Add(handle);
-            var obj = Instantiate(handle.Result, _nextPos, _nextRot, transform);
-            _spawned.Add(obj);
+    /// <summary>
+    /// Спавн сегментов.
+    /// </summary>
+    /// <param name="index">Индекс сегмента.</param>
+    private void SpawnSegment(int index)
+    {
+        if (index < 0 || index >= _sequence.Count) return;
 
-            var seg = obj.GetComponent<SegmentBase>();
-            if (seg != null) seg.AlignEntryTo(_nextPos, _nextRot);
+        TypeSequence type = _sequence[index];
 
-            // Привязываем к последней дороге
-            if (_lastRoad != null)
-            {
-                _lastRoad.isLastBeforeEnd = true;
-                var endTrig = obj.GetComponent<EndTrigger>();
-                if (endTrig != null) _lastRoad.endTrigger = endTrig;
-            }
+        var flip = false;
+
+        if (type == TypeSequence.Turn)
+        {
+            //flip = Random.value < 0.5f;
+            flip = index == 1;
         }
 
-        IEnumerator SpawnPlayer()
+        string address = GetAddress(type, flip);
+
+        // Берём из внутреннего пула или создаём новый
+        var obj = _poolManager.Spawn(address, _nextSpawnPos, _nextSpawnRot, transform);
+        if (obj == null) return;
+
+        if (!obj.TryGetComponent<SegmentBase>(out var seg))
         {
-            if (string.IsNullOrEmpty(playerAddress)) yield break;
+            Debug.LogWarning($"[LevelGenerator] Нет SegmentBase на префабе по адресу: '{address}'");
+            return;
+        }
 
-            var handle = Addressables.LoadAssetAsync<GameObject>(playerAddress);
-            yield return handle;
+        // Сброс состояния (важно для переиспользуемых объектов)
+        seg.ResetState();
+        seg.SetSegmentIndex(index);
+        _compositeDisposable.Add(seg.OnPlayerEnteredCallback.Subscribe(_ => HandlePlayerEntered(index)));
 
-            if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
+        // Выравнивание по точкам входа/выхода
+        seg.AlignEntryTo(_nextSpawnPos, _nextSpawnRot);
+        seg.GetExitData(out _nextSpawnPos, out _nextSpawnRot);
+
+        _active.AddLast(new ActiveSeg { index = index, obj = obj, seg = seg });
+
+        // Спавним пикапы и декор сразу при создании сегмента
+        if (type == TypeSequence.Straight || type == TypeSequence.Turn)
+        {
+            var road = seg as RoadSegment;
+            if (road != null)
             {
-                Debug.LogError("[LevelGenerator] Игрок не загружен!");
-                yield break;
-            }
-
-            _handles.Add(handle);
-            _playerInstance = Instantiate(handle.Result);
-
-            // Ставим на начало первой дороги
-            if (_firstRoad != null)
-            {
-                _playerInstance.transform.position = _firstRoad.entryPoint.position + _firstRoad.entryPoint.forward * 1f;
-                _playerInstance.transform.rotation = _firstRoad.entryPoint.rotation;
-            }
-
-            // CameraFollow — добавляем, если нет
-            var cam = Camera.main;
-            if (cam != null && cam.GetComponent<CameraFollow>() == null)
-            {
-                cam.gameObject.AddComponent<CameraFollow>().target = _playerInstance.transform;
+               // var spawner = road.GetComponent<PickupSpawner>();
+               // if (spawner == null)
+               // {
+               //     spawner = road.gameObject.AddComponent<PickupSpawner>();
+               //     //spawner.preset = (PickupSpawner.Preset)Random.Range(0, 3);
+               // }
+               // spawner.SpawnRandom();
+               //
+               // var decor = road.GetComponent<DecorationPlacer>();
+               // if (decor == null)
+               //     decor = road.gameObject.AddComponent<DecorationPlacer>();
+               // decor.PlaceDecorations();
             }
         }
 
-        // --- Управление тирами ---
 
-        /// <summary>Меняет тир всех активных дорог и дверей.</summary>
-        public void ApplyTiers(int roadTier, int doorTier)
+        // Привязываем дверь к предыдущей дороге
+        if (type == TypeSequence.Door)
         {
-            currentRoadTier = Mathf.Clamp(roadTier, 0, 2);
-            currentDoorTier = Mathf.Clamp(doorTier, 0, 2);
-
-            foreach (var obj in _spawned)
-            {
-                if (obj == null) continue;
-                var road = obj.GetComponent<RoadSegment>();
-                if (road != null) road.SetTier(currentRoadTier);
-
-                var door = obj.GetComponent<DoorSegment>();
-                if (door != null) door.SetTier(currentDoorTier);
-            }
+            //if (obj.TryGetComponent<DoorSegment>(out var door))
+            //{
+            //    // Находим предыдущую дорогу в активном списке
+            //    var node = _active.Last;
+            //    while (node != null)
+            //    {
+            //        if (node.Value.seg is RoadSegment prevRoad)
+            //        {
+            //            prevRoad.nextDoor = door;
+            //            // Считаем, финальная ли дверь (последняя в последовательности перед End)
+            //            //door.IsFinalDoor = (index == _sequence.Count - 2); // -1 = End
+            //            break;
+            //        }
+            //        node = node.Previous;
+            //    }
+            //}
         }
 
-        // --- Очистка ---
-
-        public void ClearLevel()
+        // End trigger
+        if (type == TypeSequence.End)
         {
-            foreach (var obj in _spawned)
-            {
-                if (obj != null) Destroy(obj);
-            }
-            _spawned.Clear();
+            //var endTrig = obj.GetComponent<EndTrigger>();
+            //if (endTrig != null && _active.Count > 0)
+            //{
+            //    // Привязываем к последней дороге
+            //    var node = _active.Last;
+            //    while (node != null)
+            //    {
+            //        if (node.Value.seg is RoadSegment prevRoad)
+            //        {
+            //            prevRoad.isLastBeforeEnd = true;
+            //            prevRoad.endTrigger = endTrig;
+            //            break;
+            //        }
+            //        node = node.Previous;
+            //    }
+            //}
+        }
+    }
 
-            foreach (var h in _handles)
-            {
-                if (h.IsValid()) Addressables.Release(h);
-            }
-            _handles.Clear();
+    /// <summary>
+    /// Обработчик события активации сегмента игроком.
+    /// </summary>
+    /// <param name="segmentIndex">Индекс сегмента.</param>
+    private void HandlePlayerEntered(int segmentIndex)
+    {
+        if (segmentIndex <= _playerSegmentIndex) return;
+        _playerSegmentIndex = segmentIndex;
+        Debug.Log($"Обработчик!!!!!!!!!!");
+        // 1. Удаляем сегменты далеко позади
+        //if (segmentIndex != _playerSegmentIndex)
+        //{
+        //
+        //    _poolManager.Despawn(_active.First.Value.obj);
+        //
+        //    // 2. Спавним сегменты впереди
+        //    int lastActiveIndex = _active.Last.Value.index;
+        //    int neededUpTo = segmentIndex + windowAhead;
+        //
+        //    for (int i = lastActiveIndex + 1; i <= neededUpTo && i < _sequence.Count; i++)
+        //    {
+        //        SpawnSegment(i);
+        //    }
+        //}
 
-            if (_playerInstance != null) Destroy(_playerInstance);
+
+        // 3. Если игрок вошёл в последний сегмент — ничего не делаем,
+        //    EndTrigger или DoorSegment сами обработают конец
+    }
+
+    private IEnumerator SpawnPlayer()
+    {
+        // Ставим на первую дорогу
+        var firstNode = _active.First;
+        if (firstNode != null && firstNode.Value.seg is RoadSegment firstRoad)
+        {
+            _playerInstance = _poolManager.Spawn("Player", firstRoad.StartPoint.position, firstRoad.StartPoint.rotation);
         }
 
-        void OnDestroy()
+        // CameraFollow
+        var cam = Camera.main;
+        if (cam != null && cam.GetComponent<CameraFollow>() == null)
         {
-            ClearLevel();
+            cam.gameObject.AddComponent<CameraFollow>().target = _playerInstance.transform;
         }
 
-        private GameObject _playerInstance;
+        yield break;
+    }
+    
+    /// <summary>
+    /// Получение адреса сегмента.
+    /// </summary>
+    /// <param name="type">Тип сегмента.</param>
+    /// <returns>Адрес.</returns>
+    private string GetAddress(TypeSequence type, bool flip = false)
+    {
+        return type switch
+        {
+            TypeSequence.Straight => "Ground",
+            TypeSequence.Turn => flip switch
+            {
+                true => "GroundL",
+                false => "GroundR",
+            },
+            TypeSequence.Door => currentDoorTier switch
+            {
+                TierType.Poor => "Door1",
+                TierType.Casual => "Door2",
+                TierType.Rich => "Door3",
+                TierType.Millionaire => "Door4",
+                _ => null,
+            },
+            TypeSequence.End => "GroundEND",
+            _ => null,
+        };
+    }
+
+    //public void ApplyTiers(int roadTier, int doorTier)
+    //{
+    //    currentRoadTier = Mathf.Clamp(roadTier, 0, 2);
+    //    currentDoorTier = Mathf.Clamp(doorTier, 0, 2);
+    //
+    //    // Меняем тир только для еще не созданных сегментов
+    //    // (уже созданные остаются как есть до возврата в пул)
+    //}
+
+    // --- Cleanup ---
+
+    //public void ClearLevel()
+    //{
+    //    // Возвращаем все активные сегменты в пул
+    //    while (_active.Count > 0)
+    //    {
+    //        var seg = _active.First.Value;
+    //        _active.RemoveFirst();
+    //
+    //        var road = seg.seg as RoadSegment;
+    //        if (road != null)
+    //        {
+    //            road.GetComponent<PickupSpawner>()?.ClearPickups();
+    //            road.GetComponent<DecorationPlacer>()?.ClearDecorations();
+    //        }
+    //
+    //        ReturnToSegPool(seg.obj);
+    //    }
+    //
+    //    // Уничтожаем все объекты из внутреннего пула
+    //    foreach (var kvp in _segPool)
+    //    {
+    //        foreach (var obj in kvp.Value)
+    //            if (obj != null) Destroy(obj);
+    //    }
+    //    _segPool.Clear();
+    //
+    //    // Уничтожаем игрока
+    //    if (_playerInstance != null)
+    //    {
+    //        Destroy(_playerInstance);
+    //        _playerInstance = null;
+    //    }
+    //
+    //    // Релизим Addressables хендлы
+    //    foreach (var h in _handles)
+    //        if (h.IsValid()) Addressables.Release(h);
+    //    _handles.Clear();
+    //    _prefabs.Clear();
+    //}
+
+    void OnDestroy()
+    {
+        //ClearLevel();
     }
 }
+

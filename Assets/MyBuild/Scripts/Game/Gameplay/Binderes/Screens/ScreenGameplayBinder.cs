@@ -58,7 +58,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 _atlasHandle = handle;
-                _atlasLoaded = true;
+                //_atlasLoaded = true;
                 _atlas_Menu = handle.Result;
                 AddAllImages();
             }
@@ -102,6 +102,6 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
         private string _atlasAddress = "Run UI";
         private SpriteAtlas _atlas_Menu;
         private AsyncOperationHandle<SpriteAtlas> _atlasHandle;
-        private bool _atlasLoaded;
+        //private bool _atlasLoaded;
     }
 }
