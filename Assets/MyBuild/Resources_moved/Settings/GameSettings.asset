@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc14e68bf67076f43ad3fa7309c30140, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Settings.GameSettings
-  LevelsList: {fileID: 11400000, guid: cc1d31c70deacd441ab2cd9e656f5109, type: 2}
+  LevelsList: {fileID: 11400000, guid: 45122868e834001488abaab622d78310, type: 2}

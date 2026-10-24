@@ -44,20 +44,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c817c5240267c1b49b81ec79a8b32651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
-  configs:
-  - address: Ground
-    preloadCount: 10
-  - address: GroundR
-    preloadCount: 4
-  - address: GroundL
-    preloadCount: 4
-  - address: Door1
-    preloadCount: 1
-  - address: Door2
-    preloadCount: 1
-  - address: Door3
-    preloadCount: 1
-  - address: Door4
-    preloadCount: 1
-  - address: Player
-    preloadCount: 1
+  _configs:
+  - _address: Bench
+    _preloadCount: 3
+  - _address: Trash
+    _preloadCount: 4
+  - _address: Ground
+    _preloadCount: 8
+  - _address: GroundL
+    _preloadCount: 3
+  - _address: GroundR
+    _preloadCount: 3
+  - _address: Door1
+    _preloadCount: 1
+  - _address: Door2
+    _preloadCount: 1
+  - _address: Door3
+    _preloadCount: 1
+  - _address: Door4
+    _preloadCount: 1
+  - _address: Bottle.001
+    _preloadCount: 3
+  - _address: Plant
+    _preloadCount: 6
+  - _address: Player
+    _preloadCount: 1
+  - _address: GroundEND
+    _preloadCount: 1

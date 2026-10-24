@@ -8,43 +8,51 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 {
     public class PoolManager : MonoBehaviour
     {
-        public static PoolManager Instance { get; private set; }
+        private static PoolManager _instance;
 
         [System.Serializable]
         public class PoolConfig
         {
             [Tooltip("Address из Addressables Groups")]
-            [SerializeField] private string address;
+            [SerializeField] private string _address;
             [Tooltip("Сколько экземпляров предсоздать при загрузке")]
-            [SerializeField] private int preloadCount = 3;
+            [SerializeField] private int _preloadCount = 3;
 
-            public string Address { get => address; }
-            public int PreloadCount { get => preloadCount; }
+            public string Address { get => _address; }
+            public int PreloadCount { get => _preloadCount; }
         }
 
         [Header("Pool Config")]
-        [SerializeField] private List<PoolConfig> configs = new();
+        [SerializeField] private List<PoolConfig> _configs = new();
 
         // Загруженные префабы: address → prefab
-        private Dictionary<string, GameObject> _prefabs = new();
+        private readonly Dictionary<string, GameObject> _prefabs = new();
         // Хэндлы загрузки: address → handle (для освобождения памяти)
-        private Dictionary<string, AsyncOperationHandle<GameObject>> _handles = new();
+        private readonly Dictionary<string, AsyncOperationHandle<GameObject>> _handles = new();
         // Пулы экземпляров: address → очередь неактивных объектов
-        private Dictionary<string, Queue<GameObject>> _pools = new();
+        private readonly Dictionary<string, Queue<GameObject>> _pools = new();
         // Какому пулу принадлежит объект: instanceID → address
-        private Dictionary<int, string> _instanceToAddress = new();
+        private readonly Dictionary<EntityId, string> _instanceToAddress = new();
 
+        /// <summary>
+        /// Признак готов ли пул.
+        /// </summary>
         public bool IsReady { get; private set; } = false;
 
         void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            Instance = this;
+            _instance = this;
+        }
+
+        void OnDestroy()
+        {
+            Cleanup();
         }
 
         /// <summary>
@@ -54,7 +62,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         public IEnumerator Initialize()
         {
             // 1. Загружаем все префабы
-            foreach (var cfg in configs)
+            foreach (var cfg in _configs)
             {
                 if (string.IsNullOrEmpty(cfg.Address) || _prefabs.ContainsKey(cfg.Address))
                     continue;
@@ -75,7 +83,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             }
 
             // 2. Предсоздаём экземпляры
-            foreach (var cfg in configs)
+            foreach (var cfg in _configs)
             {
                 if (!_prefabs.ContainsKey(cfg.Address)) continue;
 
@@ -84,7 +92,8 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
                     var obj = Instantiate(_prefabs[cfg.Address], transform);
                     obj.SetActive(false);
                     _pools[cfg.Address].Enqueue(obj);
-                    _instanceToAddress[obj.GetInstanceID()] = cfg.Address;
+                    var id = obj.GetEntityId();
+                    _instanceToAddress[id] = cfg.Address;
                 }
             }
 
@@ -111,8 +120,9 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             else
             {
                 // Пул пуст — создаём новый экземпляр
-                obj = Instantiate(_prefabs[address], parent ?? transform);
-                _instanceToAddress[obj.GetInstanceID()] = address;
+                obj = Instantiate(_prefabs[address], parent != null ? parent : transform);
+                var id = obj.GetEntityId();
+                _instanceToAddress[id] = address;
                 Debug.Log($"[Pool] Расширение пула '{address}' (+1)");
             }
 
@@ -130,7 +140,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         {
             if (obj == null) return;
 
-            int id = obj.GetInstanceID();
+            var id = obj.GetEntityId();
             if (!_instanceToAddress.TryGetValue(id, out var address))
             {
                 Debug.LogWarning($"[Pool] Объект {obj.name} не принадлежит пулу. Уничтожаю.");
@@ -173,9 +183,5 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             Debug.Log("[Pool] Полная очистка.");
         }
 
-        void OnDestroy()
-        {
-            Cleanup();
-        }
     }
 }

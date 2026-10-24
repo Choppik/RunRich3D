@@ -55,17 +55,14 @@ namespace MyBuild.Scripts.Game
             var settingsProvider = new SettingsProvider();
             _rootContainer.RegisterInstance<ISettingsProvider>(settingsProvider);
 
-            var levelManager = new LevelManager();
-            _rootContainer.RegisterInstance(levelManager);
-
-            // Не использую, так как в данном случае используем LevelManager.
-            //_rootContainer.RegisterInstance<IGameStateProvider>(new PlayerPrefsGameStateProvider());
+            _rootContainer.RegisterInstance<IGameStateProvider>(new PlayerPrefsGameStateProvider());
         }
 
         private async void RunGame()
         {
-            await _rootContainer.Resolve<ISettingsProvider>().InitializeAsync();
-            await _rootContainer.Resolve<ISettingsProvider>().LoadGameSettings();
+            var settings = _rootContainer.Resolve<ISettingsProvider>();
+            await settings.InitializeAsync();
+            await settings.LoadGameSettings();
 
             await LoadAndInstantiateUIRootAsync();
 
@@ -117,11 +114,11 @@ namespace MyBuild.Scripts.Game
 
             yield return _addressablesSceneLoader.LoadSceneCoroutine(Scenes.GAMEPLAY);
 
-            //var isGameStateLoaded = false;
-            //_rootContainer.Resolve<IGameStateProvider>().LoadGameState().Subscribe(_ => isGameStateLoaded = true);
-            //yield return new WaitUntil(() => isGameStateLoaded);
+            var isGameStateLoaded = false;
+            _rootContainer.Resolve<IGameStateProvider>().LoadGameState().Subscribe(_ => isGameStateLoaded = true);
+            yield return new WaitUntil(() => isGameStateLoaded);
 
-            var sceneEntryPoint = Object.FindFirstObjectByType<GameplayEntryPoint>();
+            var sceneEntryPoint = Object.FindAnyObjectByType<GameplayEntryPoint>();
 
             var gameplayContainer = _cachedSceneContainer = new DIContainer(_rootContainer);
 

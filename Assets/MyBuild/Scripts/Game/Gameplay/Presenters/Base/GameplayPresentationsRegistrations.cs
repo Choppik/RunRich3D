@@ -10,9 +10,9 @@ namespace MyBuild.Scripts.Game.Gameplay
     {
         public static void Register(DIContainer container)
         {
-            container.RegisterFactory(c => new UIGameplayRootPresenter()).AsSingle();
-            container.RegisterFactory(c => new WorldGameplayPresenter(container)).AsSingle();
-            container.RegisterFactory(c => new GameplayUIManager(container)).AsSingle();
+            container.RegisterType<UIGameplayRootPresenter>();
+            container.RegisterType<WorldGameplayPresenter>();
+            container.RegisterType<GameplayUIManager>();
         }
     }
 }

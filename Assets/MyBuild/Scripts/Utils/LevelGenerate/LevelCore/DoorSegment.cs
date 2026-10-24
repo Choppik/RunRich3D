@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MyBuild.Scripts.Game.Gameplay.Managers;
+using UnityEngine;
 
 namespace MyBuild.Scripts.Utils.LevelGenerate
 {
@@ -31,7 +32,9 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
         public bool IsFinalDoor => isFinalDoor;
 
-        void Start()
+        public bool IsOpen => _isOpen;
+
+        private void Start()
         {
             if (leftDoor != null) _leftClosed = leftDoor.localRotation;
             if (rightDoor != null) _rightClosed = rightDoor.localRotation;
@@ -40,41 +43,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             _rightOpen = _rightClosed * Quaternion.Euler(0, openAngle, 0);
         }
 
-        void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag("Player")) return;
-            if (!_playerReached)
-            {
-                _playerReached = true;
-                TryOpen();
-            }
-        }
-
-        /// <summary>Проверяет шкалу и открывает либо останавливает игру.</summary>
-        public void TryOpen()
-        {
-            float scale = ScoreManager.Instance != null ? ScoreManager.Instance.GetNormalizedScale() : 0f;
-
-            if (scale >= requiredScale)
-            {
-                _isOpen = true;
-                Debug.Log($"[DoorSegment] Дверь открыта! Шкала: {scale:F2}, нужно: {requiredScale:F2}");
-
-                // Если финальная дверь — победа
-                if (isFinalDoor)
-                {
-                    ScoreManager.Instance?.OnFinalDoorOpened();
-                }
-            }
-            else
-            {
-                Debug.Log($"[DoorSegment] Недостаточно шкалы! Есть: {scale:F2}, нужно: {requiredScale:F2}");
-                // Останавливаем игру
-                ScoreManager.Instance?.OnDoorFailed();
-            }
-        }
-
-        void Update()
+        private void Update()
         {
             if (_isOpen)
             {
@@ -85,9 +54,40 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             }
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
+            if (!_playerReached)
+            {
+                _playerReached = true;
+                TryOpen();
+            }
+        }
+
         /// <summary>
-        /// Может ли игрок пройти (дверь открыта)?
+        /// Проверяет шкалу и открывает либо останавливает игру.
         /// </summary>
-        public bool IsOpen => _isOpen;
+        public void TryOpen()
+        {
+            //float scale = ScoreManager.Instance != null ? ScoreManager.Instance.GetNormalizedScale() : 0f;
+            //
+            //if (scale >= requiredScale)
+            //{
+            //    _isOpen = true;
+            //    Debug.Log($"[DoorSegment] Дверь открыта! Шкала: {scale:F2}, нужно: {requiredScale:F2}");
+            //
+            //    // Если финальная дверь — победа
+            //    if (isFinalDoor)
+            //    {
+            //        ScoreManager.Instance?.OnFinalDoorOpened();
+            //    }
+            //}
+            //else
+            //{
+            //    Debug.Log($"[DoorSegment] Недостаточно шкалы! Есть: {scale:F2}, нужно: {requiredScale:F2}");
+            //    // Останавливаем игру
+            //    ScoreManager.Instance?.OnDoorFailed();
+            //}
+        }
     }
 }

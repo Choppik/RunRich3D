@@ -51,12 +51,12 @@ public class PickupSpawner : MonoBehaviour
         if (Random.value > spawnChance)
             return;
 
-        _pool = PoolManager.Instance;
-        if (_pool == null)
-        {
-            Debug.LogWarning("[PickupSpawner] PoolManager не найден.");
-            return;
-        }
+        //_pool = PoolManager.Instance;
+        //if (_pool == null)
+        //{
+        //    Debug.LogWarning("[PickupSpawner] PoolManager не найден.");
+        //    return;
+        //}
 
         _occupiedPoints.Clear();
 
@@ -162,7 +162,7 @@ public class PickupSpawner : MonoBehaviour
     /// <summary>Возвращает все пикапы в пул.</summary>
     public void ClearPickups()
     {
-        if (_pool == null) _pool = PoolManager.Instance;
+        //if (_pool == null) _pool = PoolManager.Instance;
 
         foreach (var p in _activePickups)
         {

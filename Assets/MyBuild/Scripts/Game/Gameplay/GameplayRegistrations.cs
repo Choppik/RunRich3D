@@ -1,4 +1,5 @@
 ﻿using DI;
+using MyBuild.Scripts.Game.Gameplay.Managers;
 using MyBuild.Scripts.Utils.LevelGenerate;
 using UnityEngine;
 
@@ -15,23 +16,21 @@ namespace MyBuild.Scripts.Game.Gameplay
         /// <param name="container">Контейнер, содержащий компоненты уровня приложения.</param>
         public static void Register(DIContainer container)
         {
-            // ScoreManager — синглтон
-            container.RegisterFactory(resolver =>
+            container.RegisterFactory(c =>
             {
-                var go = new GameObject("[ScoreManager]");
-                var sm = go.AddComponent<ScoreManager>();
-                Object.DontDestroyOnLoad(go);
-                return sm;
+                var go = new GameObject($"[{nameof(LevelGenerator)}]");
+                var levelGen = go.AddComponent<LevelGenerator>();
+                return levelGen;
             }).AsSingle();
 
+            // ScoreManager — синглтон
+            container.RegisterType<ScoreManager>();
+
             // QualityManager — синглтон
-            container.RegisterFactory(resolver =>
-            {
-                var go = new GameObject("[QualityManager]");
-                var qm = go.AddComponent<QualityManager>();
-                Object.DontDestroyOnLoad(go);
-                return qm;
-            }).AsSingle();
+            container.RegisterType<QualityManager>();
+
+            // LevelManager — синглтон
+            container.RegisterType<LevelManager>();
         }
     }
 }

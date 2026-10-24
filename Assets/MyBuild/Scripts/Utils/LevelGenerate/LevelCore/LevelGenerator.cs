@@ -3,33 +3,33 @@ using MyBuild.Scripts.Utils.LevelGenerate;
 using R3;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class LevelGenerator : MonoBehaviour
 {
     [Header("Mode")]
-    [SerializeField] private GenMode mode = GenMode.Fixed;
+    [SerializeField] private GenMode _mode = GenMode.Fixed;
 
     [Header("Counts")]
-    [SerializeField] private int straightCount = 6;
-    [SerializeField] private int turnCount = 3;
-    [SerializeField] private int doorCount = 4;
+    [SerializeField] private int _straightCount = 6;
+    [SerializeField] private int _turnCount = 3;
+    [SerializeField] private int _doorCount = 4;
 
     [Header("Tiers")]
-    [SerializeField] private TierType currentRoadTier = TierType.Casual;
-    [SerializeField] private TierType currentDoorTier = TierType.Poor;
-    [SerializeField] private TierType currentPlayerTier = TierType.Casual;
+    [SerializeField] private TierType _currentRoadTier = TierType.Casual;
+    [SerializeField] private TierType _currentDoorTier = TierType.Poor;
+    [SerializeField] private TierType _currentPlayerTier = TierType.Casual;
 
     [Header("Fixed Sequence (S=прямая, T=поворот, D=дверь)")]
-    [SerializeField] private string fixedSequence = "STSTSTST";
+    [SerializeField] private string _fixedSequence = "STSTSTST";
 
     [Header("Streaming Window")]
     [Tooltip("Сколько сегментов держать впереди игрока")]
-    [SerializeField] private int windowAhead = 4;
+    [SerializeField] private int _windowAhead = 5;
     [Tooltip("Сколько сегментов держать позади игрока")]
-    [SerializeField] private int windowBehind = 1;
+    [SerializeField] private int _windowBehind = 5;
 
     public bool IsGenerationComplete { get; private set; }
 
@@ -47,43 +47,75 @@ public class LevelGenerator : MonoBehaviour
     private Quaternion _nextSpawnRot;
     private int _playerSegmentIndex = -1;
     private GameObject _playerInstance;
+    private PlayerController _playerController;
 
-    // Все подписки.
+    private readonly Dictionary<SegmentBase, System.IDisposable> _segmentSubscriptions = new();
+
     private readonly CompositeDisposable _compositeDisposable = new();
 
-    private void Start()
+    private void Awake()
     {
-        if (PoolManager.Instance == null)
+#if DEBUG
+        _mode = GenMode.Fixed;
+#else
+        _mode = GenMode.Random;
+#endif
+        _poolManager = FindAnyObjectByType<PoolManager>();
+
+        if (_poolManager == null)
         {
-            Debug.LogWarning("[PoolManager] не создан!");
+            Debug.Log($"Компонент [{nameof(PoolManager)}] не найден.");
+            return;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        ClearLevel();
+        _compositeDisposable.Dispose();
+    }
+
+    public void SetMove(bool value)
+    {
+        if (_playerController == null) return;
+
+        if (value)
+        {
+            _playerController.StartMovement();
         }
         else
         {
-            _poolManager = PoolManager.Instance;
+            _playerController.StopMovement();
         }
+    }
 
-        StartCoroutine(Generate());
+    /// <summary>
+    /// Установка параметров уровня.
+    /// </summary>
+    public void SetLevelParams(int straightCount, int turnCount, int doorCount)
+    {
+        _straightCount = straightCount;
+        _turnCount = turnCount;
+        _doorCount = doorCount;
     }
 
     /// <summary>
     /// Генерация уровня.
     /// </summary>
-    /// <returns>Сгенерированный уровень.</returns>
-    private IEnumerator Generate()
+    public IEnumerator GenerateLevel()
     {
         _sequence = BuildSequence();
 
         _nextSpawnPos = transform.position;
         _nextSpawnRot = transform.rotation;
 
-        int initialCount = Mathf.Min(windowAhead + 1, _sequence.Count);
+        int initialCount = Mathf.Min(_windowAhead + 1, _sequence.Count);
         for (int i = 0; i < initialCount; i++)
         {
             SpawnSegment(i);
             yield return null; // один кадр между спавнами — плавный старт
         }
 
-        // 4. Spawn player
         yield return SpawnPlayer();
 
         IsGenerationComplete = true;
@@ -98,9 +130,9 @@ public class LevelGenerator : MonoBehaviour
     {
         var seq = new List<TypeSequence>();
 
-        if (mode == GenMode.Fixed && !string.IsNullOrEmpty(fixedSequence))
+        if (_mode == GenMode.Fixed && !string.IsNullOrEmpty(_fixedSequence))
         {
-            foreach (char c in fixedSequence.ToUpper())
+            foreach (char c in _fixedSequence.ToUpper())
             {
                 if (c == 'S') seq.Add(TypeSequence.Straight);
                 else if (c == 'T') seq.Add(TypeSequence.Turn);
@@ -110,7 +142,7 @@ public class LevelGenerator : MonoBehaviour
             return seq;
         }
 
-        int sLeft = straightCount, tLeft = turnCount, dLeft = doorCount;
+        int sLeft = _straightCount, tLeft = _turnCount, dLeft = _doorCount;
 
         // Первая — всегда прямая
         if (sLeft > 0) { seq.Add(TypeSequence.Straight); sLeft--; }
@@ -159,8 +191,7 @@ public class LevelGenerator : MonoBehaviour
 
         if (type == TypeSequence.Turn)
         {
-            //flip = Random.value < 0.5f;
-            flip = index == 1;
+            flip = Random.value < 0.5f;
         }
 
         string address = GetAddress(type, flip);
@@ -171,14 +202,24 @@ public class LevelGenerator : MonoBehaviour
 
         if (!obj.TryGetComponent<SegmentBase>(out var seg))
         {
-            Debug.LogWarning($"[LevelGenerator] Нет SegmentBase на префабе по адресу: '{address}'");
+            Debug.LogWarning($"[{nameof(LevelGenerator)}] Нет SegmentBase на префабе по адресу: '{address}'");
             return;
         }
 
         // Сброс состояния (важно для переиспользуемых объектов)
         seg.ResetState();
         seg.SetSegmentIndex(index);
-        _compositeDisposable.Add(seg.OnPlayerEnteredCallback.Subscribe(_ => HandlePlayerEntered(index)));
+
+        if (_segmentSubscriptions.TryGetValue(seg, out var oldSub))
+        {
+            oldSub.Dispose();
+        }
+
+        var newSub = seg.OnPlayerEnteredCallback.Subscribe(i => HandlePlayerEntered(i));
+
+        _compositeDisposable.Add(newSub);
+
+        _segmentSubscriptions[seg] = newSub;
 
         // Выравнивание по точкам входа/выхода
         seg.AlignEntryTo(_nextSpawnPos, _nextSpawnRot);
@@ -187,7 +228,7 @@ public class LevelGenerator : MonoBehaviour
         _active.AddLast(new ActiveSeg { index = index, obj = obj, seg = seg });
 
         // Спавним пикапы и декор сразу при создании сегмента
-        if (type == TypeSequence.Straight || type == TypeSequence.Turn)
+        if (type == TypeSequence.Straight)
         {
             var road = seg as RoadSegment;
             if (road != null)
@@ -206,7 +247,6 @@ public class LevelGenerator : MonoBehaviour
                // decor.PlaceDecorations();
             }
         }
-
 
         // Привязываем дверь к предыдущей дороге
         if (type == TypeSequence.Door)
@@ -257,28 +297,48 @@ public class LevelGenerator : MonoBehaviour
     /// <param name="segmentIndex">Индекс сегмента.</param>
     private void HandlePlayerEntered(int segmentIndex)
     {
-        if (segmentIndex <= _playerSegmentIndex) return;
+        Debug.Log($"[{nameof(HandlePlayerEntered)}] Игрок на сегменте {segmentIndex}");
+
+        // Если игрок не продвинулся вперёд — ничего не делаем
+        if (segmentIndex <= _playerSegmentIndex)
+            return;
+
         _playerSegmentIndex = segmentIndex;
-        Debug.Log($"Обработчик!!!!!!!!!!");
-        // 1. Удаляем сегменты далеко позади
-        //if (segmentIndex != _playerSegmentIndex)
-        //{
-        //
-        //    _poolManager.Despawn(_active.First.Value.obj);
-        //
-        //    // 2. Спавним сегменты впереди
-        //    int lastActiveIndex = _active.Last.Value.index;
-        //    int neededUpTo = segmentIndex + windowAhead;
-        //
-        //    for (int i = lastActiveIndex + 1; i <= neededUpTo && i < _sequence.Count; i++)
-        //    {
-        //        SpawnSegment(i);
-        //    }
-        //}
 
+        // --- 1. Вычисляем индекс сегмента, который нужно УДАЛИТЬ ---
+        int segmentToRemoveIndex = _playerSegmentIndex - _windowBehind;
 
-        // 3. Если игрок вошёл в последний сегмент — ничего не делаем,
-        //    EndTrigger или DoorSegment сами обработают конец
+        // Ищем в _active сегмент с этим индексом и удаляем его
+        var node = _active.First;
+        while (node != null)
+        {
+            if (node.Value.index == segmentToRemoveIndex)
+            {
+                var segToRemove = node.Value.seg;
+
+                // Сначала чистим подписку, потом убираем из списка, потом в пул
+                ReturnToPool(segToRemove);
+                _active.Remove(node); // Удаляем именно этот узел
+
+                Debug.Log($"[HandlePlayerEntered] Удалён сегмент {segmentToRemoveIndex} (осталось активных: {_active.Count})");
+                break; // Удалили один — выходим
+            }
+            node = node.Next;
+        }
+
+        // --- 2. Спавним ОДИН новый сегмент впереди ---
+        int nextIndexToSpawn = _playerSegmentIndex + _windowAhead;
+
+        if (nextIndexToSpawn < _sequence.Count)
+        {
+            // Проверяем, не заспавнен ли он уже (на случай рассинхрона)
+            bool alreadySpawned = _active.Any(a => a.index == nextIndexToSpawn);
+            if (!alreadySpawned)
+            {
+                Debug.Log($"[HandlePlayerEntered] Спавним сегмент {nextIndexToSpawn}");
+                SpawnSegment(nextIndexToSpawn);
+            }
+        }
     }
 
     private IEnumerator SpawnPlayer()
@@ -287,23 +347,32 @@ public class LevelGenerator : MonoBehaviour
         var firstNode = _active.First;
         if (firstNode != null && firstNode.Value.seg is RoadSegment firstRoad)
         {
-            _playerInstance = _poolManager.Spawn("Player", firstRoad.StartPoint.position, firstRoad.StartPoint.rotation);
+            _playerInstance = _poolManager.Spawn("Player", firstRoad.ConnectPoint.position, firstRoad.ConnectPoint.rotation);
+
+            if (_playerInstance.TryGetComponent(out PlayerController controller))
+            {
+                _playerController = controller;
+                _playerController.SetRoad(firstRoad, true);
+            }
         }
 
         // CameraFollow
         var cam = Camera.main;
-        if (cam != null && cam.GetComponent<CameraFollow>() == null)
+        var cameraF = cam.GetComponent<CameraFollow>();
+        if (cam != null && cameraF == null)
         {
-            cam.gameObject.AddComponent<CameraFollow>().target = _playerInstance.transform;
+            cameraF = cam.gameObject.AddComponent<CameraFollow>();
+            cameraF.SetTarget(_playerInstance.transform);
         }
 
         yield break;
     }
-    
+
     /// <summary>
     /// Получение адреса сегмента.
     /// </summary>
     /// <param name="type">Тип сегмента.</param>
+    /// <param name="flip">Поворот сегмента поворота.</param>
     /// <returns>Адрес.</returns>
     private string GetAddress(TypeSequence type, bool flip = false)
     {
@@ -315,7 +384,7 @@ public class LevelGenerator : MonoBehaviour
                 true => "GroundL",
                 false => "GroundR",
             },
-            TypeSequence.Door => currentDoorTier switch
+            TypeSequence.Door => _currentDoorTier switch
             {
                 TierType.Poor => "Door1",
                 TierType.Casual => "Door2",
@@ -328,60 +397,58 @@ public class LevelGenerator : MonoBehaviour
         };
     }
 
-    //public void ApplyTiers(int roadTier, int doorTier)
-    //{
-    //    currentRoadTier = Mathf.Clamp(roadTier, 0, 2);
-    //    currentDoorTier = Mathf.Clamp(doorTier, 0, 2);
-    //
-    //    // Меняем тир только для еще не созданных сегментов
-    //    // (уже созданные остаются как есть до возврата в пул)
-    //}
-
-    // --- Cleanup ---
-
-    //public void ClearLevel()
-    //{
-    //    // Возвращаем все активные сегменты в пул
-    //    while (_active.Count > 0)
-    //    {
-    //        var seg = _active.First.Value;
-    //        _active.RemoveFirst();
-    //
-    //        var road = seg.seg as RoadSegment;
-    //        if (road != null)
-    //        {
-    //            road.GetComponent<PickupSpawner>()?.ClearPickups();
-    //            road.GetComponent<DecorationPlacer>()?.ClearDecorations();
-    //        }
-    //
-    //        ReturnToSegPool(seg.obj);
-    //    }
-    //
-    //    // Уничтожаем все объекты из внутреннего пула
-    //    foreach (var kvp in _segPool)
-    //    {
-    //        foreach (var obj in kvp.Value)
-    //            if (obj != null) Destroy(obj);
-    //    }
-    //    _segPool.Clear();
-    //
-    //    // Уничтожаем игрока
-    //    if (_playerInstance != null)
-    //    {
-    //        Destroy(_playerInstance);
-    //        _playerInstance = null;
-    //    }
-    //
-    //    // Релизим Addressables хендлы
-    //    foreach (var h in _handles)
-    //        if (h.IsValid()) Addressables.Release(h);
-    //    _handles.Clear();
-    //    _prefabs.Clear();
-    //}
-
-    void OnDestroy()
+    private void ReturnToPool(SegmentBase seg)
     {
-        //ClearLevel();
+        if (_segmentSubscriptions.Remove(seg, out var sub))
+        {
+            sub.Dispose();
+        }
+        _poolManager.Despawn(seg.gameObject);
+    }
+
+    public void ApplyTiers(TierType roadTier, TierType doorTier, TierType playerTire)
+    {
+        if (roadTier == TierType.Poor)
+        {
+
+        }
+        //_currentRoadTier = Mathf.Clamp(roadTier, 0, 2);
+        //_currentDoorTier = Mathf.Clamp(doorTier, 0, 2);
+        //_currentPlayerTier = Mathf.Clamp(doorTier, 0, 2);
+    
+        // Меняем тир только для еще не созданных сегментов
+        // (уже созданные остаются как есть до возврата в пул)
+    }
+
+    /// <summary>
+    /// Очистка уровня.
+    /// </summary>
+    public void ClearLevel()
+    {
+        while (_active.Count > 0)
+        {
+            var seg = _active.First.Value;
+            _active.RemoveFirst();
+       
+            var road = seg.seg as RoadSegment;
+            if (road != null)
+            {
+                road.GetComponent<PickupSpawner>()?.ClearPickups();
+                //road.GetComponent<DecorationPlacer>()?.ClearDecorations();
+            }
+
+            ReturnToPool(seg.seg);
+            //_poolManager.Despawn(seg.obj);
+        }
+       
+        // Уничтожаем игрока
+        if (_playerInstance != null)
+        {
+            _poolManager.Despawn(_playerInstance);
+            _playerInstance = null;
+        }
+
+        IsGenerationComplete = false;
     }
 }
 

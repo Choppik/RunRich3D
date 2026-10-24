@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace MyBuild.Scripts.Utils
 {
-    public class AddressablesSceneLoaderCoroutine : MonoBehaviour
+    public class AddressablesSceneLoaderCoroutine
     {
         public IEnumerator LoadSceneCoroutine(string address, bool additive = false)
         {

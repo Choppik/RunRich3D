@@ -84,8 +84,14 @@ namespace MyBuild.Scripts.Game.State.Providers
 
             var map = _gameStateOrigin.Maps.First(m => m.Tag == AppConsts.MAIN_MAP_TAG);
 
-            // Добавляем все изображения.
-            map.NumbersObj.AddRange(new List<NumberObjEntity>() { new() });
+            // Добавляем все данные игроков.
+            map.ProgressPlayers.AddRange(new List<ProgressPlayer>() 
+            { 
+                new() 
+                { 
+                    Record = 0, CurrentLevel = 1, Currency = 40, Id = _gameStateOrigin.CreateEntityId() 
+                } 
+            });
 
             return new GameStateProxy(_gameStateOrigin);
         }

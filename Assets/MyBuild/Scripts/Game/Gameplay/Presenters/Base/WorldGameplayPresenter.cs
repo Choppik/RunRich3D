@@ -1,7 +1,7 @@
-﻿using DI;
-using MyBuild.Scripts.Utils.LevelGenerate;
+﻿using MyBuild.Scripts.Utils.LevelGenerate;
+using R3;
+using System;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Gameplay.Managers
@@ -9,56 +9,37 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
     /// <summary>
     /// Презентер мира: управляет генерацией уровня и связывает сервисы.
     /// </summary>
-    public class WorldGameplayPresenter
+    public class WorldGameplayPresenter : IDisposable
     {
-        private readonly DIContainer _container;
+        private readonly PoolManager _poolManager;
+        private readonly LevelGenerator _levelGenerator;
+        private readonly LevelManager _levelManager;
+        private readonly CompositeDisposable _compositeDisposable = new();
 
-        public WorldGameplayPresenter(DIContainer container)
+        public WorldGameplayPresenter(PoolManager poolManager, LevelGenerator levelGenerator, LevelManager levelManager)
         {
-            _container = container;
+            _poolManager = poolManager;
+            _levelGenerator = levelGenerator;
+            _levelManager = levelManager;
         }
 
+        /// <summary>
+        /// Запуск генератора уровня.
+        /// </summary>
         public IEnumerator StartLevelGeneration()
         {
-            var poolManager = _container.Resolve<PoolManager>();
-            var scoreManager = _container.Resolve<ScoreManager>();
-            var qualityManager = _container.Resolve<QualityManager>();
-            yield return poolManager.Initialize();
-            // Создаём LevelGenerator программно
-            var go = new GameObject("[LevelGenerator]");
-            var levelGen = go.AddComponent<LevelGenerator>();
-            //levelGen.DisableAutoStart(); // запрещаем авто-старт
+            yield return _poolManager.Initialize();
 
-            // Настраиваем (адреса и параметры можно задавать через конфиг)
-            //levelGen.mode = LevelGenerator.GenMode.Random; // TODO: Можно передачу параметров через настройки сделать
-            //levelGen.straightCount = 6;
-            //levelGen.turnCount = 2;
-            //levelGen.doorCount = 3;
-            // Адреса Addressables — задай свои
-            //levelGen.straightRoadAddresses = new[] { "roads/straight_t0", "roads/straight_t1", "roads/straight_t2" };
-            //levelGen.turnRoadAddresses = new[] { "roads/turn_t0", "roads/turn_t1", "roads/turn_t2" };
-            //levelGen.doorAddresses = new[] { "doors/door_t0", "doors/door_t1", "doors/door_t2" };
-            //levelGen.endTriggerAddress = "triggers/end_trigger";
-            //levelGen.playerAddress = "player/player_default";
+            _levelManager.StartCurrentLevel();
 
-            //levelGen.StartGeneration();
-            while (!levelGen.IsGenerationComplete)
-                yield return null;
-            // LevelGenerator сам запустится в Start(), но если хочешь управлять —
-            // можно отключить авто-старт и запускать вручную:
-            //
-            // await levelGen.GenerateLevelAsync();
+            yield return new WaitUntil(() => _levelGenerator.IsGenerationComplete);
 
-            // Уведомляем QualityManager
-            qualityManager.OnLevelGenerated(levelGen);
+            Debug.Log($"[{nameof(WorldGameplayPresenter)}] Генерация уровня запущена.");
+        }
 
-            // ScoreManager уже инициализирован, подписываемся на события
-            scoreManager.OnQualityTierChanged += tier =>
-            {
-                qualityManager.OnTierChanged(tier);
-            };
-
-            Debug.Log("[WorldGameplayPresenter] Генерация уровня запущена.");
+        public void Dispose()
+        {
+            _compositeDisposable.Dispose();
         }
     }
 }

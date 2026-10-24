@@ -3,7 +3,6 @@ using MyBuild.Scripts.Game.Gameplay.Binderes;
 using MyBuild.Scripts.Game.Gameplay.Managers;
 using MyBuild.Scripts.Utils.LevelGenerate;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -28,21 +27,20 @@ namespace MyBuild.Scripts.Game.Gameplay
             }
 
             var go = Instantiate(handle.Result);
-            DontDestroyOnLoad(go);
             
-            // 2. Получаем компонент PoolManager (он должен иметь статический Instance)
+            // 2. Получаем компонент PoolManager
             if (!go.TryGetComponent<PoolManager>(out var poolManager))
             {
-                Debug.LogError("[GameplayEntryPoint] На префабе нет компонента PoolManager!");
+                Debug.LogError($"[{nameof(GameplayEntryPoint)}] На префабе нет компонента PoolManager!");
                 yield break;
             }
 
             yield return null;
 
-            // 3. Регистрируем в DI не сам объект, а ссылку на Instance
-            container.RegisterInstance(PoolManager.Instance);
+            // 3. Регистрируем в DI пул
+            container.RegisterInstance(poolManager);
 
-            // 4. Регистраация сервисов
+            // 4. Регистрация сервисов
             GameplayRegistrations.Register(container);
 
             var gameplayPresentationContainer = new DIContainer(container);

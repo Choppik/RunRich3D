@@ -19,7 +19,7 @@ namespace MyBuild.Scripts.Game.State
             Origin = mapState;
 
             // Перебор объектов оригинального сотояния и создания их оберток.
-            mapState.NumbersObj.ForEach(pictureOrigin => Dataes.Add(new NumberObjEntityProxy(pictureOrigin)));
+            mapState.ProgressPlayers.ForEach(pictureOrigin => Dataes.Add(new ProgressPlayerProxy(pictureOrigin)));
 
             /// В данном месте нужна подписка, если во время игры что-то будет добавлятся.
 
@@ -27,15 +27,15 @@ namespace MyBuild.Scripts.Game.State
             Dataes.ObserveAdd().Subscribe(e =>
             {
                 var addedBuildingEntity = e.Value;
-                mapState.NumbersObj.Add(addedBuildingEntity.Origin);
+                mapState.ProgressPlayers.Add(addedBuildingEntity.Origin);
             });
 
             // Подписываемся на удаление объеков.
             Dataes.ObserveRemove().Subscribe(e =>
             {
                 var removeBuildingEntityProxy = e.Value;
-                var removeBuildingEntity = mapState.NumbersObj.FirstOrDefault(b => b.Id == removeBuildingEntityProxy.Id);
-                mapState.NumbersObj.Remove(removeBuildingEntity);
+                var removeBuildingEntity = mapState.ProgressPlayers.FirstOrDefault(b => b.Id == removeBuildingEntityProxy.Id);
+                mapState.ProgressPlayers.Remove(removeBuildingEntity);
             });
 
             ///
@@ -44,7 +44,7 @@ namespace MyBuild.Scripts.Game.State
         /// <summary>
         /// Список всех данных.
         /// </summary>
-        public ObservableList<NumberObjEntityProxy> Dataes { get; } = new();
+        public ObservableList<ProgressPlayerProxy> Dataes { get; } = new();
 
         /// <summary>
         /// Ориганальное состояние карты.

@@ -5,6 +5,9 @@ namespace ButchersGames
     [CreateAssetMenu(menuName = "Data/Lvl")]
     public class Level : ScriptableObject
     {
-        private int numberLevel; // Здесь можно добавить нетолько номер уровня, но и другие данные, например, название другой текстуры неба или воды и т.д.
+        public int MaxnNumberLevel; // Уровень, до которого действуют текущие настройки
+        public int StraightCount; // Кол-во прямых сегментов дороги
+        public int TurnCount; // Кол-во поворотов сегментов дороги
+        public int DoorCount; // Кол-во дверей
     }
 }

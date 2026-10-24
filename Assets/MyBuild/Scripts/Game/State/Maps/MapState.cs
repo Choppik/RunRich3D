@@ -15,7 +15,6 @@ namespace MyBuild.Scripts.Game.State
         /// </summary>
         public string Tag;
 
-
-        public List<NumberObjEntity> NumbersObj = new();
+        public List<ProgressPlayer> ProgressPlayers = new();
     }
 }

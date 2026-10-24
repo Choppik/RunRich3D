@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using MyBuild.Scripts.Game.Gameplay.Managers;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -83,11 +84,11 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             bool isPositive = gameObject.CompareTag("PositivePickup");
             int value = isPositive ? 1 : -1;
 
-            if (ScoreManager.Instance != null)
-            {
-                if (isPositive) ScoreManager.Instance.CollectPositive();
-                else ScoreManager.Instance.CollectNegative();
-            }
+            //if (ScoreManager.Instance != null)
+            //{
+            //    if (isPositive) ScoreManager.Instance.CollectPositive();
+            //    else ScoreManager.Instance.CollectNegative();
+            //}
 
             // Партикл-эффект
             var effect = GetComponentInParent<PickupEffect>();

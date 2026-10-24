@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 996499354361046124}
   - component: {fileID: 6721739912057591024}
   - component: {fileID: 2977956733671213210}
+  - component: {fileID: 6505213383907799119}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -58,33 +59,32 @@ MonoBehaviour:
   exitPoint: {fileID: 5876537560227503558}
   type: 0
   tire: 0
-  shape: 0
-  leftBound: -1
-  rightBound: 1
-  length: 10
-  startPoint: {fileID: 5948966239918758152}
-  enterTrigger: {fileID: 3966454946792354466}
-  decorationBenchPoints:
+  _shape: 0
+  _leftBound: -1
+  _rightBound: 1
+  _length: 10
+  _decorationBenchPoints:
   - {fileID: 2656343477849533825}
   - {fileID: 630071589305020936}
-  decorationFinishElementsPoints: []
-  decorationPlantPoints:
+  _decorationFinishElementsPoints:
+  - {fileID: 7134085037658126132}
+  - {fileID: 4264683898964952870}
+  _decorationPlantPoints:
   - {fileID: 8280188205965210158}
   - {fileID: 9108911085864517691}
   - {fileID: 7969592569192764430}
   - {fileID: 8207798296385563964}
   - {fileID: 5892824334656009408}
-  decorationTrashPoints:
+  _decorationTrashPoints:
   - {fileID: 2176328169777831336}
   - {fileID: 5945585814036554356}
   - {fileID: 716919405253793350}
   - {fileID: 8955427447113747417}
   - {fileID: 2020862533583356633}
-  savePoints:
-  - {fileID: 5948966239918758152}
-  finishPoints:
+  _savePoints: []
+  _finishPoints:
   - {fileID: 4200719760791247005}
-  checkForDeleteTrigger: {fileID: 5483077127403948034}
+  _checkForDeleteTrigger: {fileID: 0}
   nextDoor: {fileID: 0}
   isLastBeforeEnd: 0
   endTrigger: {fileID: 0}
@@ -132,6 +132,27 @@ MonoBehaviour:
   leftDoorAddress: DoorNegative
   rightDoorAddress: DoorPozitive
   triggerSize: {x: 1, y: 1, z: 0.1}
+--- !u!65 &6505213383907799119
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285607137954469464}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &309225140358998635
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +535,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3018378993366949790}
-  - component: {fileID: 3966454946792354466}
   m_Layer: 0
   m_Name: StartPoint
   m_TagString: Untagged
@@ -537,27 +557,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3082012750033977114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3966454946792354466
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4300960794110168888}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 10}
-  m_Center: {x: 0, y: 0, z: -5}
 --- !u!1 &4317598095339204899
 GameObject:
   m_ObjectHideFlags: 0

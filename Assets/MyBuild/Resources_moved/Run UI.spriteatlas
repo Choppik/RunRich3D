@@ -2,6 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!687078895 &4343727234628468602
 SpriteAtlas:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -53,24 +54,7 @@ SpriteAtlas:
     - 8739ac4c871c44649a6a2326a62ab5ce: 21300000
     - b1784dddd0fa86a4d85f9c001ed4511f: 21300000
   m_MasterAtlas: {fileID: 0}
-  m_PackedSprites:
-  - {fileID: 21300000, guid: 9d7e75007ea861d409e506a0b182123f, type: 3}
-  - {fileID: 21300000, guid: bf54d680d36f1bf4ab4e98d9869d5d5a, type: 3}
-  - {fileID: 21300000, guid: fc3b10612f42c944c9b88d5d6f9ea03c, type: 3}
-  - {fileID: 21300000, guid: 35372ef7b67da5e4f8664385953140f7, type: 3}
-  - {fileID: 21300000, guid: f7b48709d9d8a6840ab823aed11672d3, type: 3}
-  - {fileID: 21300000, guid: 2097f18b2857fcd43899e351c7c7a052, type: 3}
-  - {fileID: 21300000, guid: 8739ac4c871c44649a6a2326a62ab5ce, type: 3}
-  - {fileID: 21300000, guid: b1784dddd0fa86a4d85f9c001ed4511f, type: 3}
-  m_PackedSpriteNamesToIndex:
-  - Exit
-  - key
-  - gauge_empty
-  - dollar_Logo
-  - Dollar_Red
-  - slot_transparent 1
-  - Dollar_Green
-  - gauge_full
   m_RenderDataMap: {}
   m_Tag: Run UI
   m_IsVariant: 0
+  m_Guid: b960987b0653637449ff0bcb8b59ca6d

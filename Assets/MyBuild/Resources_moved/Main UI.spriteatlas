@@ -2,6 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!687078895 &4343727234628468602
 SpriteAtlas:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -63,34 +64,7 @@ SpriteAtlas:
     - 2f1274dc87d44d64b8808cebaff3090c: 21300000
     - b64db5cd67620924d95a48e247111e3e: 21300000
   m_MasterAtlas: {fileID: 0}
-  m_PackedSprites:
-  - {fileID: 21300000, guid: c4a450619ad06ba44b8d7ca8ed25c8fd, type: 3}
-  - {fileID: 21300000, guid: a9d91bd2994ed704b951ba170498f6be, type: 3}
-  - {fileID: 21300000, guid: 67f4793480658ec47963a1042e101b50, type: 3}
-  - {fileID: 21300000, guid: 4130ab56b1fbe374ea8a219ed13f1384, type: 3}
-  - {fileID: 21300000, guid: c33a4dc8558ecc84ca9da851ca4161d1, type: 3}
-  - {fileID: 21300000, guid: c89e0a99d1f865a42b310d5cb12493ec, type: 3}
-  - {fileID: 21300000, guid: e70131e9cee63cc4b9e738d0b16c25f1, type: 3}
-  - {fileID: 21300000, guid: 857907f9b9130c44ab07d030327320cb, type: 3}
-  - {fileID: 21300000, guid: 2d4889f99864ef24089bf808100489fe, type: 3}
-  - {fileID: 21300000, guid: a230a96ab427c11499ba6bf5f0284639, type: 3}
-  - {fileID: 21300000, guid: 0273b2abb59339b4e8f4cf6ca13b331d, type: 3}
-  - {fileID: 21300000, guid: 2f1274dc87d44d64b8808cebaff3090c, type: 3}
-  - {fileID: 21300000, guid: b64db5cd67620924d95a48e247111e3e, type: 3}
-  m_PackedSpriteNamesToIndex:
-  - 9grid_black_transparent
-  - Upgrade
-  - arrow_left_right
-  - rounded-rectangle
-  - house
-  - Circle
-  - shop_skin
-  - settings
-  - hand
-  - city_orange
-  - 9grid_green
-  - pickups
-  - default
   m_RenderDataMap: {}
   m_Tag: Main UI
   m_IsVariant: 0
+  m_Guid: b12be3fc4b178c242b6d3c9e9043f14d

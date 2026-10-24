@@ -1,5 +1,4 @@
-﻿using MyBuild.Scripts.Game.Common;
-using MyBuild.Scripts.Utils.MVP.UI;
+﻿using MyBuild.Scripts.Utils.MVP.UI;
 
 namespace MyBuild.Scripts.Game.Gameplay
 {

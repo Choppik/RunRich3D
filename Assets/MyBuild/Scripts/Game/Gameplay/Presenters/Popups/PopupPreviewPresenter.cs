@@ -37,8 +37,8 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
         /// </summary>
         private void RequestToGo(bool value)
         {
-            _screenPresenter.Run(value);
             _manager.ClosePopup(Name);
+            _screenPresenter.RunCurrenLevel(value);
         }
 
         public override void Dispose()

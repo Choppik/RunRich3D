@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5829274685867149770}
-  - component: {fileID: 7187133931780405574}
   m_Layer: 0
   m_Name: StartPoint
   m_TagString: Untagged
@@ -32,27 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2541633439264001389}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7187133931780405574
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840400113328062036}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2, y: 1, z: 2}
-  m_Center: {x: 0, y: 0, z: -1}
 --- !u!1 &4659933507615927048
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,6 +212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2541633439264001389}
   - component: {fileID: 951687129018220452}
+  - component: {fileID: 522508917151303337}
   m_Layer: 0
   m_Name: GroundL
   m_TagString: Untagged
@@ -275,19 +254,38 @@ MonoBehaviour:
   exitPoint: {fileID: 6947948755081083907}
   type: 0
   tire: 0
-  shape: 2
-  leftBound: -1
-  rightBound: 1
-  length: 10
-  startPoint: {fileID: 0}
-  enterTrigger: {fileID: 7187133931780405574}
-  decorationBenchPoints: []
-  decorationFinishElementsPoints: []
-  decorationPlantPoints: []
-  decorationTrashPoints: []
-  savePoints: []
-  finishPoints: []
-  checkForDeleteTrigger: {fileID: 0}
+  _shape: 1
+  _leftBound: -1
+  _rightBound: 1
+  _length: 1
+  _decorationBenchPoints: []
+  _decorationFinishElementsPoints: []
+  _decorationPlantPoints: []
+  _decorationTrashPoints: []
+  _savePoints: []
+  _finishPoints: []
+  _checkForDeleteTrigger: {fileID: 0}
   nextDoor: {fileID: 0}
   isLastBeforeEnd: 0
   endTrigger: {fileID: 0}
+--- !u!65 &522508917151303337
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385473895062422367}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 1, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}

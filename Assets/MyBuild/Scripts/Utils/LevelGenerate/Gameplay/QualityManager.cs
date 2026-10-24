@@ -1,24 +1,17 @@
-﻿using UnityEngine;
+﻿using MyBuild.Scripts.Game.Common;
 
 namespace MyBuild.Scripts.Utils.LevelGenerate
 {
     /// <summary>
-    /// Управляет тирами дороги и двери. Реагирует на изменение шкалы.
+    /// Управляет тирами дороги, двери и игрока. Реагирует на изменение счета.
     /// </summary>
-    public class QualityManager : MonoBehaviour
+    public class QualityManager
     {
-        public static QualityManager Instance { get; private set; }
-
-        [Range(0, 2)] public int roadTier = 0; // TODO: Изменить на изменение типа
-        [Range(0, 2)] public int doorTier = 0;
+        private TierType _roadTier = TierType.Casual;
+        private TierType _doorTier = TierType.Poor;
+        private TierType _playerTier = TierType.Casual;
 
         private LevelGenerator _levelGen;
-
-        void Awake()
-        {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
-        }
 
         public void OnLevelGenerated(LevelGenerator gen)
         {
@@ -26,18 +19,17 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             ApplyTiers();
         }
 
-        public void OnTierChanged(int newTier)
+        public void OnTierChanged(TierType newTier)
         {
             // Тир дороги = качеству, тир двери = тоже
-            roadTier = Mathf.Clamp(newTier, 0, 2);
-            doorTier = Mathf.Clamp(newTier, 0, 2);
+            _roadTier = _doorTier = _playerTier = newTier;
             ApplyTiers();
         }
 
-        void ApplyTiers()
+        private void ApplyTiers()
         {
-            //if (_levelGen != null)
-            //    _levelGen.ApplyTiers(roadTier, doorTier);
+            if (_levelGen != null)
+                _levelGen.ApplyTiers(_roadTier, _doorTier, _playerTier);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MyBuild.Scripts.Game.Gameplay.Managers;
+using UnityEngine;
 
 namespace MyBuild.Scripts.Utils.LevelGenerate
 {
@@ -31,13 +32,13 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             if (player != null) player.StopMovement();
 
             // Уведомляем ScoreManager
-            if (ScoreManager.Instance != null)
-            {
-                if (isVictory)
-                    ScoreManager.Instance.OnVictory();
-                else
-                    ScoreManager.Instance.OnDefeat();
-            }
+            //if (ScoreManager.Instance != null)
+            //{
+            //    if (isVictory)
+            //        ScoreManager.Instance.OnVictory();
+            //    else
+            //        ScoreManager.Instance.OnDefeat();
+            //}
 
             Debug.Log("[EndTrigger] Игрок достиг конца уровня.");
         }

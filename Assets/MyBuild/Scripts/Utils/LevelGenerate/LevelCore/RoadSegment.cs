@@ -9,45 +9,38 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
     public class RoadSegment : SegmentBase
     {
         [Header("Road")]
-        [SerializeField] private RoadShape shape = RoadShape.Straight;
+        [SerializeField] private RoadShape _shape = RoadShape.Straight;
 
         [Header("Bounds (относительно центра дороги)")]
         [Tooltip("Левая граница по X")]
-        [SerializeField] private float leftBound = -1f;
+        [SerializeField] private float _leftBound = -1f;
         [Tooltip("Правая граница по X")]
-        [SerializeField] private float rightBound = 1f;
+        [SerializeField] private float _rightBound = 1f;
         [Tooltip("Длина дороги по Z (для прямой)")]
-        [SerializeField] private float length = 10f;
-        [SerializeField] private Transform startPoint;
-
-        [Header("Trigger")]
-        [Tooltip("Триггер в начале дороги. При входе — активируется сегмент.")]
-        [SerializeField] private Collider enterTrigger;
+        [SerializeField] private float _length = 10f;
 
         [Header("Decoration Points")]
         [Tooltip("Пустые объекты для скамеек")]
-        [SerializeField] private Transform[] decorationBenchPoints;
+        [SerializeField] private Transform[] _decorationBenchPoints;
         [Tooltip("Пустые объекты для елементов финиша")]
-        [SerializeField] private Transform[] decorationFinishElementsPoints;
+        [SerializeField] private Transform[] _decorationFinishElementsPoints;
         [Tooltip("Пустые объекты для кустов")]
-        [SerializeField] private Transform[] decorationPlantPoints;
+        [SerializeField] private Transform[] _decorationPlantPoints;
         [Tooltip("Пустые объекты для мусора")]
-        [SerializeField] private Transform[] decorationTrashPoints;
+        [SerializeField] private Transform[] _decorationTrashPoints;
         [Tooltip("Пустые объекты для контрольной точки")]
-        [SerializeField] private Transform[] savePoints;
+        [SerializeField] private Transform[] _savePoints;
         [Tooltip("Пустые объекты для полосы финиша")]
-        [SerializeField] private Transform[] finishPoints;
+        [SerializeField] private Transform[] _finishPoints;
 
         [Header("Check For Delete Last Segment")]
         [Tooltip("Триггер в середине дороги. При входе удаляется предыдущий сегмет.")]
-        [SerializeField] private Collider checkForDeleteTrigger;
+        [SerializeField] private Collider _checkForDeleteTrigger;
 
         // Ссылки (заполняются LevelGenerator'ом)
         [HideInInspector] public DoorSegment nextDoor;
         [HideInInspector] public bool isLastBeforeEnd = false;
         [HideInInspector] public EndTrigger endTrigger;
-
-        public Transform StartPoint { get => startPoint; }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -83,8 +76,38 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         /// <summary>
         /// Границы для PlayerController в локальных координатах дороги.
         /// </summary>
-        public float GetLeftBound() => leftBound;
-        public float GetRightBound() => rightBound;
-        public RoadShape GetRoadShape() => shape;
+        public float GetLeftBound() => _leftBound;
+        public float GetRightBound() => _rightBound;
+        public RoadShape GetRoadShape() => _shape;
+
+        /// <summary>
+        /// Получение координат точек декора на дороге.
+        /// </summary>
+        /// <param name="typeDecor">Тип декора.</param>
+        public Transform[] AddDecor(TypeDecor typeDecor)
+        {
+            switch (typeDecor)
+            {
+                case TypeDecor.Plant:
+                    return CheckArr(_decorationPlantPoints) ? _decorationPlantPoints : null;
+                case TypeDecor.Trash:
+                    return CheckArr(_decorationTrashPoints) ? _decorationTrashPoints : null;
+                case TypeDecor.Bench:
+                    return CheckArr(_decorationBenchPoints) ? _decorationBenchPoints : null;
+                case TypeDecor.FinishElements:
+                    return CheckArr(_decorationFinishElementsPoints) ? _decorationFinishElementsPoints : null;
+                case TypeDecor.FinishLine:
+                    return CheckArr(_finishPoints) ? _finishPoints : null;
+                // TODO: Еще линия сохранения и ковры должны быть.
+                case TypeDecor.None:
+                default:
+                    return null;
+            }
+        }
+
+        private bool CheckArr(Transform[] array)
+        {
+            return array != null && array.Length > 0;
+        }
     }
 }
