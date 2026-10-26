@@ -14,30 +14,25 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
     public class PlayerController : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] private float _forwardSpeed = 0.5f; // скорость движения вперед
-        [SerializeField] private float _steerSpeed = 10f; // скорость движения в бок
-        [SerializeField] private float _maxSteerOffset = 0.18f; // макс. отклонение от центра дороги
-        [SerializeField] private float _turnSpeed = 5000f;      // скорость доворота в направлении дороги = 2f
-
-        [Header("Настройки движения")]
-        [Tooltip("Смещение границ дороги. 0 = полная ширина, 0.2 = игрок двигается в пределах 80% ширины")]
-        [Range(0f, 1f)]
-        [SerializeField] private float _roadWidthOffset = 0.2f;
+        [SerializeField] private float _forwardSpeed = 3f;
+        [SerializeField] private float _maxSteerOffset = 0.7f; // макс. смещение от центра (в метрах)
+        [SerializeField] private float _steerSmoothTime = 0.15f; // время сглаживания руления (сек)
+        [SerializeField] private float _turnSpeed = 5000f;       // град/сек
 
         [Header("Input")]
         [SerializeField] private bool _useMouse = true;
         [SerializeField] private float _mouseSensitivity = 0.01f;
 
-        private float _currentSteer = 0f;
-        private float _targetSteer = 0f;
+        private float _targetSteer = 0f; // от -1 до 1
+        private float _currentSteer = 0f; // от -1 до 1
         private bool _isMoving = false;
         private bool _isInputActive = false;
         private Vector2 _lastInputPos;
-        private RoadSegment _currentRoad;
-        private RoadSegment _lastRoad;
-        public Observable<RoadSegment> RoadSet => _roadSet;
-
-        private readonly Subject<RoadSegment> _roadSet = new();
+        private float _currentSteerVelocity = 0f;
+        private RoadSegmentSpline _currentSpline;
+        private RoadSegmentSpline _nextSpline;
+        private float _distanceAlongSpline = 0f;
+        private float _splineLength = 0f;
         private readonly CompositeDisposable _compositeDisposable = new();
 
         // Для тач-ввода: храним «последнее активное касание», чтобы
@@ -48,6 +43,15 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         {
             // EnhancedTouch нужно явно включить — без этого касания не будут приходить
             EnhancedTouchSupport.Enable();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            var road = other.GetComponent<RoadSegmentSpline>();
+            if (road != null && road != _currentSpline)
+            {
+                _nextSpline = road;
+            }
         }
 
         private void OnDestroy()
@@ -66,85 +70,67 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             Move();
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            var road = other.GetComponentInParent<RoadSegment>();
-            if (road != null && road != _currentRoad)
-            {
-                SetRoad(road, false);
-            }
-        }   
-
         /// <summary>
         /// Обработчик нажатия по экрану.
         /// </summary>
         private void HandleInput()
         {
+            if (!_isMoving) return;
+
+            float inputDelta = 0f;
+            bool hasInput = false;
+
             if (_useMouse)
             {
-                // Мышь в Input System: текущий указатель есть всегда (в редакторе и на ПК),
-                // проверяем на null на всякий случай (например, консоль без мыши)
                 var mouse = Mouse.current;
-                if (mouse != null)
+                if (mouse != null && mouse.leftButton.isPressed)
                 {
-                    // Аналог Input.GetMouseButton(0) — левая кнопка удерживается
-                    if (mouse.leftButton.isPressed)
+                    hasInput = true;
+                    if (!_isInputActive)
                     {
-                        if (!_isInputActive)
-                        {
-                            // Жест только начался — запоминаем стартовую позицию,
-                            // чтобы первый кадр не давал рывок руления
-                            _isInputActive = true;
-                            _lastInputPos = mouse.position.ReadValue();
-                        }
-
-                        // position — это InputAction, поэтому читаем значение через ReadValue()
-                        Vector2 position = mouse.position.ReadValue();
-                        Vector2 delta = position - _lastInputPos;
-
-                        _targetSteer += delta.x * _mouseSensitivity;
-                        _targetSteer = Mathf.Clamp(_targetSteer, -_maxSteerOffset, _maxSteerOffset);
-                        _lastInputPos = position;
+                        _isInputActive = true;
+                        _lastInputPos = mouse.position.ReadValue();
                     }
-                    else
-                    {
-                        // Кнопку отпустили — перестаём вилять и сбрасываем состояние жеста
-                        _isInputActive = false;
-                        _targetSteer = 0f;
-                    }
+
+                    Vector2 position = mouse.position.ReadValue();
+                    Vector2 delta = position - _lastInputPos;
+                    inputDelta = delta.x * _mouseSensitivity;
+                    _lastInputPos = position;
+                }
+                else
+                {
+                    _isInputActive = false;
                 }
             }
 
-            // Тач: в Input System касания приходят через EnhancedTouch
             foreach (var touch in Touch.activeTouches)
             {
                 if (_activeFingerId == -1)
                 {
-                    // Свободного жеста нет — начинаем отслеживать этот палец
                     _activeFingerId = touch.finger.index;
                 }
 
-                if (touch.finger.index != _activeFingerId)
-                {
-                    // Этот палец не наш — пропускаем (второй палец не рулит)
-                    continue;
-                }
+                if (touch.finger.index != _activeFingerId) continue;
 
-                // Фазы в новой системе: Began → Moved → Ended/Canceled
                 if (touch.phase == UnityEngine.InputSystem.TouchPhase.Moved)
                 {
-                    _targetSteer += touch.delta.x * _mouseSensitivity;
-                    _targetSteer = Mathf.Clamp(_targetSteer, -_maxSteerOffset, _maxSteerOffset);
+                    hasInput = true;
+                    inputDelta = touch.delta.x * _mouseSensitivity;
                 }
                 else if (touch.phase == UnityEngine.InputSystem.TouchPhase.Ended ||
                          touch.phase == UnityEngine.InputSystem.TouchPhase.Canceled)
                 {
-                    _targetSteer = 0f;
-                    _activeFingerId = -1; // жест завершён — готовы к новому касанию
+                    _activeFingerId = -1;
                 }
 
-                // Обработали наш палец — дальше по коллекции не идём
                 break;
+            }
+
+            // Сдвигаем целевую позицию, но сразу жёстко ограничиваем по ширине дороги
+            if (hasInput)
+            {
+                _targetSteer += inputDelta;
+                _targetSteer = Mathf.Clamp(_targetSteer, -_maxSteerOffset, _maxSteerOffset);
             }
         }
 
@@ -153,79 +139,60 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         /// </summary>
         private void Move()
         {
-            if (_currentRoad == null) return;
+            if (_currentSpline == null) return;
 
-            // 1. Руление
-            _currentSteer = Mathf.Lerp(_currentSteer, _targetSteer, Time.deltaTime * _steerSpeed);
-
-            Vector3 roadForward = GetRoadForward();
-            if (roadForward.sqrMagnitude < 0.001f) return;
-
-            // Синий: куда должна смотреть дорога (цель)
-            Debug.DrawRay(transform.position, roadForward.normalized * 6f, Color.blue, 0.1f);
-            // Зеленый: куда реально смотрит игрок (текущее состояние)
-            Debug.DrawRay(transform.position, transform.forward * 6f, Color.green, 0.1f);
-
-            Vector3 roadRight = Vector3.Cross(Vector3.up, roadForward);
-
-            // 2. Целевая ротация (куда должна смотреть дорога)
-            Quaternion targetRotation = Quaternion.LookRotation(roadForward, Vector3.up);
-
-            // 3. ПЛАВНЫЙ ПОВОРОТ (Работает всегда: и на стыке, и внутри сегмента)
-            // Игрок сохраняет инерцию текущего поворота и плавно стремится к targetRotation.
-            float maxRadiansThisFrame = _turnSpeed * Mathf.Deg2Rad * Time.deltaTime;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRadiansThisFrame);
-
-            // 4. Движение
-            transform.position += roadForward * (_forwardSpeed * Time.deltaTime);
-            transform.position += roadRight * (_currentSteer * _steerSpeed * Time.deltaTime);
-
-            // 5. Границы
-            Vector3 localPos = _currentRoad.transform.InverseTransformPoint(transform.position);
-            localPos.x = Mathf.Clamp(localPos.x, _currentRoad.GetLeftBound(), _currentRoad.GetRightBound());
-            transform.position = _currentRoad.transform.TransformPoint(localPos);
-
-            // Обновляем _lastRoad ТОЛЬКО для отладки или других механик, 
-            // но НЕ для управления вращением!
-            _lastRoad = _currentRoad;
-        }
-
-        /// <summary>
-        /// Направление движения дороги. Ось сегментов направлена против движения
-        /// генерации (так настроена генерация), поэтому forward инвертируется.
-        /// </summary>
-        private Vector3 GetRoadForward()
-        {
-            return _currentRoad.GetMoveDirectionAt(transform.position);
-        }
-
-        public void AlignToRoad()
-        {
-            if (_currentRoad == null) return;
-
-            Vector3 roadForward = GetRoadForward();
-
-            if (roadForward.sqrMagnitude < 0.001f) return;
-
-            transform.rotation = Quaternion.LookRotation(roadForward, Vector3.up);
-        }
-
-        /// <summary>
-        /// Устанавливает текущий сегмент дороги. Также можно вызвать извне,
-        /// чтобы задать дорогу до старта движения.
-        /// </summary>
-        /// <param name="road">Сегмент дороги.</param>
-        /// <param name="snapToRoadDirection">Мгновенно развернуть игрока вдоль дороги.</param>
-        public void SetRoad(RoadSegment road, bool snapToRoadDirection = false)
-        {
-            _currentRoad = road;
-
-            if (snapToRoadDirection)
+            if (_splineLength <= 0f)
             {
-                AlignToRoad();
+                _splineLength = _currentSpline.GetLength();
+                if (_splineLength <= 0f) return;
             }
 
-            _roadSet.OnNext(road);
+            float t = _distanceAlongSpline / _splineLength;
+
+            if (_distanceAlongSpline >= _splineLength)
+            {
+                if (_nextSpline != null)
+                {
+                    _distanceAlongSpline -= _splineLength;
+                    _currentSpline = _nextSpline;
+                    _nextSpline = null;
+                    _splineLength = _currentSpline.GetLength();
+                    if (_splineLength <= 0f) return;
+
+                    t = _distanceAlongSpline / _splineLength;
+                }
+                else
+                {
+                    _isMoving = false;
+                    return;
+                }
+            }
+
+            Vector3 posOnSpline = _currentSpline.GetPoint(t);
+            Vector3 tangent = _currentSpline.GetTangent(t).normalized;
+
+            // Инерция: плавно следуем за целевой позицией
+            _currentSteer = Mathf.SmoothDamp(_currentSteer, _targetSteer, ref _currentSteerVelocity, _steerSmoothTime);
+
+            // ВАЖНО: жёстко ограничиваем итоговое смещение, чтобы инерция не вынесла за край
+            _currentSteer = Mathf.Clamp(_currentSteer, -_maxSteerOffset, _maxSteerOffset);
+
+            Vector3 right = Vector3.Cross(Vector3.up, tangent).normalized;
+            Vector3 finalPos = posOnSpline + right * _currentSteer;
+
+            float moveDist = _forwardSpeed * Time.deltaTime;
+            _distanceAlongSpline += moveDist;
+
+            Quaternion targetRot = Quaternion.LookRotation(tangent, Vector3.up);
+            float maxRad = _turnSpeed * Mathf.Deg2Rad * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, maxRad);
+
+            transform.position = finalPos;
+        }
+
+        public void SetStartRoad(RoadSegmentSpline segmentSpline)
+        {
+            _currentSpline = segmentSpline;
         }
 
         /// <summary>

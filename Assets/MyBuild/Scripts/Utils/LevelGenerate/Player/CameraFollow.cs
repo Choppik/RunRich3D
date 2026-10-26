@@ -14,7 +14,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         // Для раннеров лучше использовать Lerp вместо SmoothDamp, чтобы не было инерции при резких остановках/поворотах.
         // Значение 10-15 дает очень плотное следование без рывков.
         [Range(0.1f, 20f)]
-        [SerializeField] private float _followSpeed = 12f;
+        [SerializeField] private float _followSpeed = 10f;
 
         // Чувствительность вращения. 
         // ВАЖНО: При резком повороте игрока (5000 speed) этот параметр нужно либо уменьшить, 

@@ -104,9 +104,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.PlayerController
   _forwardSpeed: 3
-  _steerSpeed: 10
-  _maxSteerOffset: 2
+  _maxSteerOffset: 0.7
+  _steerSmoothTime: 0.15
   _turnSpeed: 5000
+  _roadWidthOffset: 0.2
   _useMouse: 1
   _mouseSensitivity: 0.01
 --- !u!136 &5158360586821817959

@@ -1,4 +1,5 @@
 ﻿using MyBuild.Scripts.Game.Common;
+using MyBuild.Scripts.Utils;
 using MyBuild.Scripts.Utils.LevelGenerate;
 using R3;
 using System.Collections;
@@ -352,7 +353,7 @@ public class LevelGenerator : MonoBehaviour
             if (_playerInstance.TryGetComponent(out PlayerController controller))
             {
                 _playerController = controller;
-                _playerController.SetRoad(firstRoad, true);
+                _playerController.SetStartRoad(firstRoad.gameObject.GetComponent<RoadSegmentSpline>());
             }
         }
 
