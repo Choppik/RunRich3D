@@ -1,5 +1,4 @@
-﻿using MyBuild.Scripts.Game.Gameplay.Managers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MyBuild.Scripts.Utils.LevelGenerate
 {
@@ -9,19 +8,19 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
     public class DoorSegment : SegmentBase
     {
         [Tooltip("Минимальная шкала (0..1), чтобы дверь открылась")]
-        [SerializeField] private float requiredScale = 0.3f;
+        [SerializeField] private float _requiredScale = 0.3f;
 
         [Tooltip("Аниматор двери (или Transform для вращения/сдвига)")]
-        [SerializeField] private Transform leftDoor;
-        [SerializeField] private Transform rightDoor;
+        [SerializeField] private Transform _leftDoor;
+        [SerializeField] private Transform _rightDoor;
 
         [Tooltip("Триггер перед дверью")]
-        [SerializeField] private Collider doorTrigger;
+        [SerializeField] private Collider _doorTrigger;
 
         [Header("Visuals")]
-        [SerializeField] private float openAngle = 90f;
-        [SerializeField] private float openSpeed = 2f;
-        [SerializeField] private bool isFinalDoor = false;
+        [SerializeField] private float _openAngle = 90f;
+        [SerializeField] private float _openSpeed = 2f;
+        [SerializeField] private bool _isFinalDoor = false;
 
         private bool _isOpen = false;
         private bool _playerReached = false;
@@ -30,27 +29,27 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         private Quaternion _leftOpen;
         private Quaternion _rightOpen;
 
-        public bool IsFinalDoor => isFinalDoor;
+        public bool IsFinalDoor => _isFinalDoor;
 
         public bool IsOpen => _isOpen;
 
         private void Start()
         {
-            if (leftDoor != null) _leftClosed = leftDoor.localRotation;
-            if (rightDoor != null) _rightClosed = rightDoor.localRotation;
+            if (_leftDoor != null) _leftClosed = _leftDoor.localRotation;
+            if (_rightDoor != null) _rightClosed = _rightDoor.localRotation;
 
-            _leftOpen = _leftClosed * Quaternion.Euler(0, -openAngle, 0);
-            _rightOpen = _rightClosed * Quaternion.Euler(0, openAngle, 0);
+            _leftOpen = _leftClosed * Quaternion.Euler(0, -_openAngle, 0);
+            _rightOpen = _rightClosed * Quaternion.Euler(0, _openAngle, 0);
         }
 
         private void Update()
         {
             if (_isOpen)
             {
-                if (leftDoor != null)
-                    leftDoor.localRotation = Quaternion.Lerp(leftDoor.localRotation, _leftOpen, Time.deltaTime * openSpeed);
-                if (rightDoor != null)
-                    rightDoor.localRotation = Quaternion.Lerp(rightDoor.localRotation, _rightOpen, Time.deltaTime * openSpeed);
+                if (_leftDoor != null)
+                    _leftDoor.localRotation = Quaternion.Lerp(_leftDoor.localRotation, _leftOpen, Time.deltaTime * _openSpeed);
+                if (_rightDoor != null)
+                    _rightDoor.localRotation = Quaternion.Lerp(_rightDoor.localRotation, _rightOpen, Time.deltaTime * _openSpeed);
             }
         }
 
@@ -59,6 +58,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             if (!other.CompareTag("Player")) return;
             if (!_playerReached)
             {
+                NotifyPlayerEntered();
                 _playerReached = true;
                 TryOpen();
             }

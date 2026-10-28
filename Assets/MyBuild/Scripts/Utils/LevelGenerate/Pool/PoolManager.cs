@@ -108,7 +108,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         {
             if (!_pools.TryGetValue(address, out var queue))
             {
-                Debug.LogWarning($"[Pool] Адрес '{address}' не зарегистрирован.");
+                Debug.LogWarning($"[{nameof(PoolManager)}] Адрес '{address}' не зарегистрирован.");
                 return null;
             }
 
@@ -123,7 +123,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
                 obj = Instantiate(_prefabs[address], parent != null ? parent : transform);
                 var id = obj.GetEntityId();
                 _instanceToAddress[id] = address;
-                Debug.Log($"[Pool] Расширение пула '{address}' (+1)");
+                Debug.Log($"[{nameof(PoolManager)}] Расширение пула '{address}' (+1)");
             }
 
             if (parent != null) obj.transform.SetParent(parent, false);
@@ -143,7 +143,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             var id = obj.GetEntityId();
             if (!_instanceToAddress.TryGetValue(id, out var address))
             {
-                Debug.LogWarning($"[Pool] Объект {obj.name} не принадлежит пулу. Уничтожаю.");
+                Debug.LogWarning($"[{nameof(PoolManager)}] Объект {obj.name} не принадлежит пулу. Уничтожаю.");
                 Destroy(obj);
                 return;
             }
@@ -180,7 +180,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             _prefabs.Clear();
 
             IsReady = false;
-            Debug.Log("[Pool] Полная очистка.");
+            Debug.Log($"[{nameof(PoolManager)}] Полная очистка.");
         }
 
     }

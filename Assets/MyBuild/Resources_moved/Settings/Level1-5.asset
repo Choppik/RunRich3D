@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Level1-5
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Settings.Level.Level
   MaxNumberLevel: 5
-  StraightCount: 6
-  TurnCount: 3
   DoorCount: 4
+  ChanceDoor: 7

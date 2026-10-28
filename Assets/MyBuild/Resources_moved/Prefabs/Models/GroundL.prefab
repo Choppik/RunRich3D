@@ -284,10 +284,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e9a556d6388854db270f898985a863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.RoadSegment
-  entryPoint: {fileID: 5829274685867149770}
-  exitPoint: {fileID: 6947948755081083907}
-  type: 0
-  tire: 0
+  _entryPoint: {fileID: 5829274685867149770}
+  _exitPoint: {fileID: 6947948755081083907}
+  _type: 0
+  _tire: 0
   _shape: 1
   _leftBound: -1
   _rightBound: 1
@@ -298,7 +298,6 @@ MonoBehaviour:
   _decorationTrashPoints: []
   _savePoints: []
   _finishPoints: []
-  _checkForDeleteTrigger: {fileID: 0}
   nextDoor: {fileID: 0}
   isLastBeforeEnd: 0
   endTrigger: {fileID: 0}
@@ -321,8 +320,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 1, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2, y: 2, z: 1}
+  m_Center: {x: 0, y: 0.5, z: -2}
 --- !u!114 &8340325550521848665
 MonoBehaviour:
   m_ObjectHideFlags: 0

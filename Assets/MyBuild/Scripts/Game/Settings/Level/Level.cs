@@ -6,8 +6,7 @@ namespace MyBuild.Scripts.Game.Settings.Level
     public class Level : ScriptableObject
     {
         public int MaxNumberLevel; // Уровень, до которого действуют текущие настройки
-        public int StraightCount; // Кол-во прямых сегментов дороги
-        public int TurnCount; // Кол-во поворотов сегментов дороги
         public int DoorCount; // Кол-во дверей
+        public int ChanceDoor; // Шанс спавна двери
     }
 }

@@ -33,10 +33,6 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         [Tooltip("Пустые объекты для полосы финиша")]
         [SerializeField] private Transform[] _finishPoints;
 
-        [Header("Check For Delete Last Segment")]
-        [Tooltip("Триггер в середине дороги. При входе удаляется предыдущий сегмет.")]
-        [SerializeField] private Collider _checkForDeleteTrigger;
-
         // Ссылки (заполняются LevelGenerator'ом)
         [HideInInspector] public DoorSegment nextDoor;
         [HideInInspector] public bool isLastBeforeEnd = false;

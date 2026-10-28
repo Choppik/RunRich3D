@@ -12,23 +12,25 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         public enum SegmentType { Road, Door, End } // Типы сегментов.
 
         [Header("Connection Points")]
-        [SerializeField] private Transform entryPoint;
-        [SerializeField] private Transform exitPoint;
+        [SerializeField] private Transform _entryPoint;
+        [SerializeField] private Transform _exitPoint;
 
         [Header("Type Segment")]
-        [SerializeField] private SegmentType type = SegmentType.Road;
+        [SerializeField] private SegmentType _type = SegmentType.Road;
         [Header("Level")]
-        [SerializeField] private TierType tire = TierType.None;
+        [SerializeField] private TierType _tire = TierType.None;
 
         /// <summary>
         /// Точка, которой сегмент стыкуется с предыдущим.
         /// </summary>
-        public Transform ConnectPoint => entryPoint;
+        public Transform ConnectPoint => _entryPoint;
 
         /// <summary>
         /// Точка, откуда начинается следующий сегмент.
         /// </summary>
-        public Transform LeavePoint => exitPoint;
+        public Transform LeavePoint => _exitPoint;
+
+        public int SegmentIndex => _segmentIndex;
 
         private int _segmentIndex = -1;
 
@@ -64,8 +66,22 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         /// </summary>
         public void GetExitData(out Vector3 pos, out Quaternion rot)
         {
-            pos = LeavePoint.position;
-            rot = LeavePoint.rotation;
+            if (_exitPoint == null)
+            {
+                // Громко ругаемся один раз, но не роняем генерацию
+                Debug.LogError($"[{name}] Exit Point не назначен! Использую позицию самого сегмента как выход.");
+
+                // Дефолт: выход = вход сегмента (объект просто продолжит дорогу по прямой)
+                pos = _entryPoint != null
+                    ? _entryPoint.position + transform.forward * 10f
+                    : transform.position + transform.forward * 10f;
+
+                rot = transform.rotation;
+                return;
+            }
+
+            pos = _exitPoint.position;
+            rot = _exitPoint.rotation;
         }
 
         /// <summary>
@@ -73,7 +89,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         /// </summary>
         public virtual void SetTier(TierType value)
         {
-            tire = value;
+            _tire = value;
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
 
             if (levelSetting != null)
             {
-                _levelGenerator.SetLevelParams(levelSetting.StraightCount, levelSetting.TurnCount, levelSetting.DoorCount);
+                _levelGenerator.SetLevelParams(levelSetting.DoorCount, levelSetting.ChanceDoor);
             }
 
             _coroutine.StartCoroutine(_levelGenerator.GenerateLevel());
@@ -78,7 +78,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
 
         public void Run()
         {
-            _levelGenerator.SetMove(true);
+            _levelGenerator.SetMovement(true);
         }
 
         public void StartCurrentLevel()

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1320059430387675278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4011096933314995538}
+  m_Layer: 0
+  m_Name: ExitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4011096933314995538
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320059430387675278}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7968724507103175060}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2842105229685317192
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,6 +209,7 @@ Transform:
   m_Children:
   - {fileID: 6880201111962326380}
   - {fileID: 5456819200767368593}
+  - {fileID: 4011096933314995538}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8595883377103698653
@@ -192,10 +224,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e9a556d6388854db270f898985a863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.RoadSegment
-  entryPoint: {fileID: 5456819200767368593}
-  exitPoint: {fileID: 0}
-  type: 2
-  tire: 0
+  _entryPoint: {fileID: 5456819200767368593}
+  _exitPoint: {fileID: 4011096933314995538}
+  _type: 2
+  _tire: 0
   _shape: 0
   _leftBound: -1
   _rightBound: 1
@@ -206,7 +238,6 @@ MonoBehaviour:
   _decorationTrashPoints: []
   _savePoints: []
   _finishPoints: []
-  _checkForDeleteTrigger: {fileID: 0}
   nextDoor: {fileID: 0}
   isLastBeforeEnd: 0
   endTrigger: {fileID: 0}
@@ -273,5 +304,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2, y: 2, z: 1}
+  m_Center: {x: 0, y: 0.5, z: -4.5}

@@ -17,7 +17,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         [SerializeField] private float _forwardSpeed = 3f;
         [SerializeField] private float _maxSteerOffset = 0.7f; // макс. смещение от центра (в метрах)
         [SerializeField] private float _steerSmoothTime = 0.15f; // время сглаживания руления (сек)
-        [SerializeField] private float _turnSpeed = 5000f;       // град/сек
+        [SerializeField] private float _turnSpeed = 5000f;
 
         [Header("Input")]
         [SerializeField] private bool _useMouse = true;
