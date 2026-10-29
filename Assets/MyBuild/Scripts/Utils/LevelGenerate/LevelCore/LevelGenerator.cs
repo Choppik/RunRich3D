@@ -13,7 +13,9 @@ public class LevelGenerator : MonoBehaviour
 
     [Header("Counts")]
     [SerializeField] private int _doorCount = 4;
-    [SerializeField] private int _chanceDoor = 7;
+    [SerializeField, Range(0, 100)] private int _chanceDoor = 70;
+    [SerializeField, Min(1)] private int _minTurnsPerChunk = 1;          // минимум поворотов на чанк
+    [SerializeField, Range(0, 100)] private int _extraTurnChance = 40;
 
     [Header("Tiers")]
     [SerializeField] private TierType _currentRoadTier = TierType.Casual;
@@ -47,9 +49,7 @@ public class LevelGenerator : MonoBehaviour
     private int _playerSegmentIndex = -1;
     private GameObject _playerInstance;
     private readonly Dictionary<SegmentBase, System.IDisposable> _segmentSubscriptions = new();
-
     private readonly CompositeDisposable _compositeDisposable = new();
-
     private bool _isUpdatingWindow;
 
     private void Awake()
@@ -94,10 +94,12 @@ public class LevelGenerator : MonoBehaviour
     /// <summary>
     /// Установка параметров уровня.
     /// </summary>
-    public void SetLevelParams(int doorCount, int chanceDoor)
+    public void SetLevelParams(int doorCount, int chanceDoor, int minTurnsPerChunk, int extraTurnChance)
     {
         _doorCount = doorCount;
         _chanceDoor = chanceDoor;
+        _minTurnsPerChunk = minTurnsPerChunk;
+        _extraTurnChance = extraTurnChance;
     }
 
     /// <summary>
@@ -143,84 +145,48 @@ public class LevelGenerator : MonoBehaviour
             return seq;
         }
 
-        int dLeft = _doorCount;
-        
-        // Первая - прямая
-        seq.Add(TypeSequence.Straight);
+        int doorsLeft = Mathf.Max(1, _doorCount); // Минимально на уровне может быть 1 дверь
 
-        while (true)
+        // Стартовый чанк: игрок разгоняется, дверей сразу не даём
+        AddRoadChunk(seq);
+
+        while (doorsLeft > 0)
         {
-            TypeSequence last = seq[^1];
-
-            // Если уже набрали нужное количество дверей — выходим из цикла генерации, дальше только End
-            if (dLeft == 0)
-                break;
-
-            var opts = new List<TypeSequence>();
-
-            // ГЛАВНОЕ ПРАВИЛО: после Straight обязательно идёт Door или Turn и наоборот.
-
-            // Добавляем Дверь и Поворот, если лимит позволяет и мы на прямой
-            if (dLeft > 0 && last == TypeSequence.Straight)
-            {
-                opts.Add(TypeSequence.Door);
-            }
-            
-            opts.Add(TypeSequence.Turn);
-
-            if (opts.Count == 0)
-            {
-                // Тупик: нельзя поставить ни дверь, ни поворот (например, кончились двери, а повороты запрещены).
-                // Выходим, дальше сработает блок доводки дверей.
-                break;
-            }
-
-            TypeSequence pick;
-
-            if (dLeft > 0 && opts.Contains(TypeSequence.Door))
-            {
-                // Шанс выбора двери
-                pick = Random.Range(0, 10) < _chanceDoor ? TypeSequence.Door : TypeSequence.Turn;
-            }
-            else
-            {
-                pick = TypeSequence.Straight;
-            }
-
-            seq.Add(pick);
-
-            if (pick == TypeSequence.Door)
-            {
-                dLeft--;
-            }
-        }
-
-        // БЛОК ДОВОДКИ ДВЕРЕЙ: Гарантируем ровно 4 двери.
-        // Если цикл закончился, а дверей меньше 4 — добиваем их принудительно.
-        while (dLeft != 0)
-        {
-            TypeSequence last = seq[^1];
-
-            // По правилу: дверь ставится только после прямой.
-            if (last != TypeSequence.Straight)
-            {
-                seq.Add(TypeSequence.Straight);
-            }
-
-            // Теперь последний точно Straight — ставим дверь
-            if (seq[^1] == TypeSequence.Straight)
+            if (Random.Range(0, 100) < _chanceDoor)
             {
                 seq.Add(TypeSequence.Door);
-                dLeft--;
+                doorsLeft--;
+
+                // Между дверями всегда дорога, если двери ещё остались
+                if (doorsLeft > 0)
+                    AddRoadChunk(seq);
             }
             else
             {
-                break; // Защита от зацикливания
+                // Дверь не выпала — тянем дорогу дальше
+                AddRoadChunk(seq);
             }
         }
 
         seq.Add(TypeSequence.End);
         return seq;
+    }
+
+    /// <summary>
+    /// Чанк дороги: прямая + минимум поворотов (каждый поворот обязан закрываться прямой).
+    /// Всегда оканчивается Straight, поэтому после чанка можно смело ставить Door или End.
+    /// </summary>
+    private void AddRoadChunk(List<TypeSequence> seq)
+    {
+        seq.Add(TypeSequence.Straight);
+
+        int turns = 0;
+        while (turns < _minTurnsPerChunk || Random.Range(0, 100) < _extraTurnChance)
+        {
+            seq.Add(TypeSequence.Turn);
+            seq.Add(TypeSequence.Straight); // после поворота всегда прямая
+            turns++;
+        }
     }
 
     /// <summary>

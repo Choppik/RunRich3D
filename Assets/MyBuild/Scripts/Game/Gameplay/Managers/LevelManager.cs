@@ -57,7 +57,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
 
             if (levelSetting != null)
             {
-                _levelGenerator.SetLevelParams(levelSetting.DoorCount, levelSetting.ChanceDoor);
+                _levelGenerator.SetLevelParams(levelSetting.DoorCount, levelSetting.ChanceDoor, levelSetting.MinTurnsPerChunk, levelSetting.ExtraTurnChance);
             }
 
             _coroutine.StartCoroutine(_levelGenerator.GenerateLevel());
