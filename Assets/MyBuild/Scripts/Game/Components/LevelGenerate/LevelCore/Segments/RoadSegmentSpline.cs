@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace MyBuild.Scripts.Utils
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     public class RoadSegmentSpline : MonoBehaviour
     {

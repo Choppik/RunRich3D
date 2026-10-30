@@ -1,6 +1,6 @@
 ﻿using MyBuild.Scripts.Game.Common;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     /// <summary>
     /// Управляет тирами дороги, двери и игрока. Реагирует на изменение счета.

@@ -34,5 +34,13 @@
         public const string LocalizationEN = "en";
 
         #endregion
+
+        #region Адреса ресурсов.
+
+        public const string PickupPositive = nameof(PickupPositive);
+        public const string PickupNegative = nameof(PickupNegative);
+        public const string Player = nameof(Player);
+
+        #endregion
     }
 }

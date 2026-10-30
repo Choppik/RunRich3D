@@ -1,7 +1,7 @@
 ﻿using DI;
+using MyBuild.Scripts.Game.Components.LevelGenerate;
 using MyBuild.Scripts.Game.Gameplay.Binderes;
 using MyBuild.Scripts.Game.Gameplay.Managers;
-using MyBuild.Scripts.Utils.LevelGenerate;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;

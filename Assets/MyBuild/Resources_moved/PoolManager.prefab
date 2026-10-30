@@ -41,14 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3762148588219540700}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c817c5240267c1b49b81ec79a8b32651, type: 3}
+  m_Script: {fileID: 11500000, guid: c13e57e12db23c34589caecf7fab3c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
   _configs:
-  - _address: Bench
-    _preloadCount: 3
-  - _address: Trash
-    _preloadCount: 4
   - _address: Ground
     _preloadCount: 8
   - _address: GroundL
@@ -63,11 +59,15 @@ MonoBehaviour:
     _preloadCount: 1
   - _address: Door4
     _preloadCount: 1
-  - _address: Bottle.001
-    _preloadCount: 3
-  - _address: Plant
-    _preloadCount: 6
   - _address: Player
     _preloadCount: 1
+  - _address: Trash
+    _preloadCount: 5
+  - _address: Plant
+    _preloadCount: 5
+  - _address: PickupPositive
+    _preloadCount: 20
+  - _address: PickupNegative
+    _preloadCount: 20
   - _address: GroundEND
     _preloadCount: 1

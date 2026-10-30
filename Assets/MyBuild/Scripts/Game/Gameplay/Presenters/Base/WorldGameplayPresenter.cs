@@ -1,4 +1,4 @@
-﻿using MyBuild.Scripts.Utils.LevelGenerate;
+﻿using MyBuild.Scripts.Game.Components.LevelGenerate;
 using R3;
 using System;
 using System.Collections;

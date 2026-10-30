@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     public class CameraFollow : MonoBehaviour
     {

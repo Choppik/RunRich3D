@@ -2,7 +2,7 @@
 using R3;
 using UnityEngine;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     /// <summary>
     /// Абстрактный класс сегмента (дорога, дверь, финал). 
@@ -15,8 +15,12 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         [SerializeField] private Transform _entryPoint;
         [SerializeField] private Transform _exitPoint;
 
+        [Header("Pickup Zone")]
+        [SerializeField] private PickupSpawnZone _pickupSpawnZone;
+
         [Header("Type Segment")]
         [SerializeField] private SegmentType _type = SegmentType.Road;
+
         [Header("Level")]
         [SerializeField] private TierType _tire = TierType.None;
 
@@ -124,6 +128,31 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
             dir.y = 0f;
             return dir.sqrMagnitude > 0.001f ? dir.normalized : dir;
+        }
+
+        /// <summary>
+        /// Спавнит контент сегмента. Вызывать ПОСЛЕ AlignEntryTo,
+        /// когда позиция и поворот сегмента уже финальные.
+        /// </summary>
+        public void SpawnContent()
+        {
+            _pickupSpawnZone?.SpawnContent();
+        }
+
+        /// <summary>
+        /// Плотный спавн контента.
+        /// </summary>
+        public void SpawnDenseContent()
+        {
+            _pickupSpawnZone?.SpawnDenseContent();
+        }
+
+        /// <summary>
+        /// Сдаёт контент при возврате сегмента в пул.
+        /// </summary>
+        public void DespawnContent()
+        {
+            _pickupSpawnZone?.DespawnAll();
         }
 
         /// <summary>

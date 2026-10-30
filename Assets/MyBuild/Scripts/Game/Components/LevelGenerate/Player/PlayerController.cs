@@ -5,7 +5,7 @@ using UnityEngine.InputSystem.EnhancedTouch; // расширенная рабо�
 
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     /// <summary>
     /// Управление персонажем: движение активируется через StartMovement(),

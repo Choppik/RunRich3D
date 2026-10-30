@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: 339071c25c96b2f44ae9361a55993a15
   m_SerializeEntries:
   - m_GUID: 0546cfa62df07d54aaa64268036ecc06
-    m_Address: VariantContainerItem
+    m_Address: PickupPositive
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -92,6 +92,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7a5849ced8eba8740858a2f2851e2102
     m_Address: Door1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 805c4a1e761414f46bfb7a16bb36e707
+    m_Address: PickupNegative
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

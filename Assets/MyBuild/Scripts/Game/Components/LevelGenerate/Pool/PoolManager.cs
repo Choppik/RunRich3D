@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     public class PoolManager : MonoBehaviour
     {
@@ -128,6 +128,7 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
 
             if (parent != null) obj.transform.SetParent(parent, false);
             obj.transform.SetPositionAndRotation(pos, rot);
+            obj.transform.localScale = _prefabs[address].transform.localScale;
             obj.SetActive(true);
 
             return obj;

@@ -1,6 +1,6 @@
 ﻿using DI;
+using MyBuild.Scripts.Game.Components.LevelGenerate;
 using MyBuild.Scripts.Game.Gameplay.Managers;
-using MyBuild.Scripts.Utils.LevelGenerate;
 using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Gameplay

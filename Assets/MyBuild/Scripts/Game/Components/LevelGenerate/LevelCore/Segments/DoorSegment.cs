@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     /// <summary>
     /// Дверь между сегментами дороги. Открывается только если шкала достаточна.
@@ -69,11 +69,11 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         /// </summary>
         public void TryOpen()
         {
+               _isOpen = true; // TODO: Отключать при деспавне.
             //float scale = ScoreManager.Instance != null ? ScoreManager.Instance.GetNormalizedScale() : 0f;
             //
             //if (scale >= requiredScale)
             //{
-            //    _isOpen = true;
             //    Debug.Log($"[DoorSegment] Дверь открыта! Шкала: {scale:F2}, нужно: {requiredScale:F2}");
             //
             //    // Если финальная дверь — победа

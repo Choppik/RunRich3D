@@ -1,9 +1,9 @@
 ﻿using DI;
+using MyBuild.Scripts.Game.Components.LevelGenerate;
 using MyBuild.Scripts.Game.Settings;
 using MyBuild.Scripts.Game.State.Providers;
 using MyBuild.Scripts.Game.State.Root.Proxy;
 using MyBuild.Scripts.Utils;
-using MyBuild.Scripts.Utils.LevelGenerate;
 using System;
 using System.Collections.Generic;
 using System.Linq;

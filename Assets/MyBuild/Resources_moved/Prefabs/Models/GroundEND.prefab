@@ -184,9 +184,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7968724507103175060}
   - component: {fileID: 8595883377103698653}
-  - component: {fileID: 3241043497324159721}
-  - component: {fileID: 3838166219539301936}
   - component: {fileID: 1551525823347266334}
+  - component: {fileID: 9078041075375167192}
   m_Layer: 0
   m_Name: GroundEND
   m_TagString: Untagged
@@ -226,6 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.RoadSegment
   _entryPoint: {fileID: 5456819200767368593}
   _exitPoint: {fileID: 4011096933314995538}
+  _pickupSpawnZone: {fileID: 9078041075375167192}
   _type: 2
   _tire: 0
   _shape: 0
@@ -240,51 +240,6 @@ MonoBehaviour:
   _finishPoints: []
   nextDoor: {fileID: 0}
   isLastBeforeEnd: 0
-  endTrigger: {fileID: 0}
---- !u!114 &3241043497324159721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7431181029838754349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1d1125bddda6514db77cad466a76234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PickupSpawner
-  zoneStartZ: -2.5
-  zoneEndZ: 2.5
-  zoneHalfWidth: 1
-  spawnHeightY: 0.3
-  pattern: 2
-  spawnChance: 0.8
-  positiveRatio: 0.7
-  spacing: 1
-  positivePoolKey: pickup_positive
-  negativePoolKey: pickup_negative
-  maxPickupsPerSegment: 12
---- !u!114 &3838166219539301936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7431181029838754349}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76029276665d7b64cac18d74bbff6cfb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.SpecialDoorSpawner
-  spawnChance: 0.3
-  maxPairs: 1
-  spawnZ: -0.6
-  leftDoorX: -0.5
-  rightDoorX: 0.5
-  spawnY: 0.5
-  leftDoorAddress: DoorNegative
-  rightDoorAddress: DoorPozitive
-  triggerSize: {x: 1, y: 1, z: 0.1}
 --- !u!65 &1551525823347266334
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -306,3 +261,31 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 1}
   m_Center: {x: 0, y: 0.5, z: -4.5}
+--- !u!114 &9078041075375167192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7431181029838754349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98ced65f35ff574697fe14abc6da4a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Components.LevelGenerate.PickupSpawnZone
+  _poolManager: {fileID: 0}
+  _positiveChance: 100
+  _spawnScale: 0.5
+  _zoneSize: {x: 2, y: 0.5, z: 7.5}
+  _minGroups: 3
+  _maxGroups: 6
+  _minPerGroup: 1
+  _maxPerGroup: 4
+  _spacing: 0.45
+  _gapBetweenGroups: 0.6
+  _minDistance: 0.4
+  _denseRows: 10
+  _centerOffset: {x: 0, y: 0.5, z: 0}
+  _lineSideOffset: 0.6
+  _previewSeed: 11881
+  _previewDense: 1

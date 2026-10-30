@@ -1,7 +1,8 @@
 ﻿using MyBuild.Scripts.Game.Common;
+using MyBuild.Scripts.Utils.LevelGenerate;
 using UnityEngine;
 
-namespace MyBuild.Scripts.Utils.LevelGenerate
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     /// <summary>
     /// Дорога: прямая или поворот. Содержит триггер старта, точки спавна пикапов и точки декора.
@@ -36,7 +37,6 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
         // Ссылки (заполняются LevelGenerator'ом)
         [HideInInspector] public DoorSegment nextDoor;
         [HideInInspector] public bool isLastBeforeEnd = false;
-        [HideInInspector] public EndTrigger endTrigger;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -53,10 +53,10 @@ namespace MyBuild.Scripts.Utils.LevelGenerate
             {
                 nextDoor.TryOpen();
             }
-            else if (isLastBeforeEnd && endTrigger != null)
-            {
-                endTrigger.OnPlayerReached();
-            }
+            //else if (isLastBeforeEnd && endTrigger != null)
+            //{
+            //    endTrigger.OnPlayerReached();
+            //}
         }
 
         /// <summary>
