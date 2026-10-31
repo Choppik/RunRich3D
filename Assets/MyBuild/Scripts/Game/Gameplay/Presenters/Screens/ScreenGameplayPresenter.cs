@@ -1,12 +1,13 @@
-﻿using R3;
-using System.Linq;
-using MyBuild.Scripts.Game.Common;
-using MyBuild.Scripts.Utils.MVP.UI;
+﻿using MyBuild.Scripts.Game.Common;
+using MyBuild.Scripts.Game.Components.LevelGenerate;
+using MyBuild.Scripts.Game.Gameplay.Binderes;
+using MyBuild.Scripts.Game.Gameplay.Managers;
 using MyBuild.Scripts.Game.GameRoot;
 using MyBuild.Scripts.Game.Settings;
 using MyBuild.Scripts.Game.State.Providers;
-using MyBuild.Scripts.Game.Gameplay.Managers;
-using MyBuild.Scripts.Game.Gameplay.Binderes;
+using MyBuild.Scripts.Utils.MVP.UI;
+using R3;
+using System.Linq;
 
 namespace MyBuild.Scripts.Game.Gameplay.Presenters
 {
@@ -18,11 +19,13 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
         public ScreenGameplayPresenter(
             GameplayUIManager manager,
             ISettingsProvider settingsProvider,
-            LevelManager levelManager)
+            LevelManager levelManager,
+            ScoreManager scoreManager)
         {
             _manager = manager;
             _settingsProvider = settingsProvider;
             _levelManager = levelManager;
+            _scoreManager = scoreManager;
         }
 
         public override void BindWindow(IWindowBinder window)
@@ -38,7 +41,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
         /// </summary>
         private void BindSubscriptions()
         {
-            
+            _scoreManager.OnScoreChanged.Subscribe(OnScoreChange).AddTo(_compositeDisposable);
         }
 
         public void RunCurrenLevel(bool value)
@@ -62,6 +65,11 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
             }
         }
 
+        private void OnScoreChange(int value)
+        {
+            Binder.UpdateCurrentScore(value.ToString());
+        }
+
         public override void Dispose()
         {
             Window?.Close();
@@ -76,6 +84,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
         private readonly GameplayUIManager _manager;
         private readonly ISettingsProvider _settingsProvider;
         private readonly LevelManager _levelManager;
+        private readonly ScoreManager _scoreManager;
         private PopupPreviewPresenter _popupPreviewPresenter;
 
         // Все подписки.

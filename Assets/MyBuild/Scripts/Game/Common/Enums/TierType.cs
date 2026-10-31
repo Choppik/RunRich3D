@@ -1,5 +1,4 @@
-﻿
-namespace MyBuild.Scripts.Game.Common
+﻿namespace MyBuild.Scripts.Game.Common
 {
     public enum TierType
     { 

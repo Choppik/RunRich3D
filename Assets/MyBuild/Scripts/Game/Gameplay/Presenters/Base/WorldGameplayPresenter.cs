@@ -14,13 +14,17 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         private readonly PoolManager _poolManager;
         private readonly LevelGenerator _levelGenerator;
         private readonly LevelManager _levelManager;
+        private readonly ScoreManager _scoreManager;
+        private readonly QualityManager _qualityManager;
         private readonly CompositeDisposable _compositeDisposable = new();
 
-        public WorldGameplayPresenter(PoolManager poolManager, LevelGenerator levelGenerator, LevelManager levelManager)
+        public WorldGameplayPresenter(PoolManager poolManager, LevelGenerator levelGenerator, LevelManager levelManager, ScoreManager scoreManager, QualityManager qualityManager)
         {
             _poolManager = poolManager;
             _levelGenerator = levelGenerator;
             _levelManager = levelManager;
+            _scoreManager = scoreManager;
+            _qualityManager = qualityManager;
         }
 
         /// <summary>
@@ -31,6 +35,8 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
             yield return _poolManager.Initialize();
 
             _levelManager.StartCurrentLevel();
+            _qualityManager.ReadyQualityManager();
+            _scoreManager.SubscribeToPickups();
 
             yield return new WaitUntil(() => _levelGenerator.IsGenerationComplete);
 

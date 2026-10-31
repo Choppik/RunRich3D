@@ -1,21 +1,16 @@
-﻿using DI;
-using MyBuild.Scripts.Game.Components.LevelGenerate;
+﻿using MyBuild.Scripts.Game.Components.LevelGenerate;
 using MyBuild.Scripts.Game.Settings;
 using MyBuild.Scripts.Game.State.Providers;
-using MyBuild.Scripts.Game.State.Root.Proxy;
 using MyBuild.Scripts.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Gameplay.Managers
 {
     /// <summary>
     /// Менеджер управления уровнями.
     /// </summary>
-    public class LevelManager
+    public class LevelManager : IDisposable
     {
         private readonly ScoreManager _scoreManager;
         private readonly QualityManager _qualityManager;
@@ -100,6 +95,11 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
             }
             
             return 0;
+        }
+
+        public void Dispose()
+        {
+            _levelGenerator.ClearLevel();
         }
     }
 }

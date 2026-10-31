@@ -53,6 +53,8 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
 
         private readonly List<GameObject> _instances = new();
         private bool _spawned;
+        private readonly int _minValuePickup = 5;
+        private readonly int _maxValuePickup = 20;
 
         private readonly Dictionary<PickupTrigger, System.IDisposable> _pickupsSubscriptions = new();
 
@@ -311,9 +313,22 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
                         continue;
                     }
 
+                    var value = Random.Range(_minValuePickup, 1 + _maxValuePickup);
+
+                    if (obj.TryGetComponent<PickupView>(out var view))
+                    {
+                        string s = string.Empty;
+                        if (isPositive)
+                            s = "+";
+                        else
+                            s = "-";
+
+                        view.SetPickupValue($"{s}{value}");
+                    }
+
                     if (obj.TryGetComponent<PickupTrigger>(out var trigger))
                     {
-                        trigger.Init(isPositive, _poolManager);
+                        trigger.Init(isPositive, _poolManager, value);
                         _pickupsSubscriptions[trigger] = trigger.CollectedAndReturned.Subscribe(OnPickupCollected);
                     }
 

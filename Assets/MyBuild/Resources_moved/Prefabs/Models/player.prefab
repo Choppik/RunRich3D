@@ -73,12 +73,19 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1009562781750873517, guid: 71817148474c78f44881805ab073ace0, type: 3}
+    - {fileID: -1256841003522951573, guid: 71817148474c78f44881805ab073ace0, type: 3}
+    - {fileID: 2432445491478374896, guid: 71817148474c78f44881805ab073ace0, type: 3}
+    - {fileID: -3517081148287939857, guid: 71817148474c78f44881805ab073ace0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 71817148474c78f44881805ab073ace0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7594564900838475333}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 71817148474c78f44881805ab073ace0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3492054317077188257}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 71817148474c78f44881805ab073ace0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5158360586821817959}
@@ -107,9 +114,29 @@ MonoBehaviour:
   _maxSteerOffset: 0.7
   _steerSmoothTime: 0.15
   _turnSpeed: 5000
-  _roadWidthOffset: 0.2
   _useMouse: 1
   _mouseSensitivity: 0.01
+--- !u!114 &3492054317077188257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677946976683633498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 402a41b393d0216479eba3ed49722fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Components.LevelGenerate.MeshSwapper
+  _tierMeshes:
+  - _tier: 1
+    _meshObject: {fileID: 9116539205128286923}
+  - _tier: 2
+    _meshObject: {fileID: 3685904873541517903}
+  - _tier: 3
+    _meshObject: {fileID: 2427739130361519949}
+  - _tier: 4
+    _meshObject: {fileID: 8733402725380763660}
 --- !u!136 &5158360586821817959
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -160,3 +187,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &2427739130361519949 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5027945920182515386, guid: 71817148474c78f44881805ab073ace0, type: 3}
+  m_PrefabInstance: {fileID: 1983882036488050187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3685904873541517903 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6291848880615795644, guid: 71817148474c78f44881805ab073ace0, type: 3}
+  m_PrefabInstance: {fileID: 1983882036488050187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8733402725380763660 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2108971386342365689, guid: 71817148474c78f44881805ab073ace0, type: 3}
+  m_PrefabInstance: {fileID: 1983882036488050187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9116539205128286923 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7281298225518208192, guid: 71817148474c78f44881805ab073ace0, type: 3}
+  m_PrefabInstance: {fileID: 1983882036488050187}
+  m_PrefabAsset: {fileID: 0}

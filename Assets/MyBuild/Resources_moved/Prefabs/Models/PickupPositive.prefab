@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.00000011920929, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &3596697874625798920
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: + 2
+  m_text: +20
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -74,8 +74,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278245670
-  m_fontColor: {r: 0.14774165, g: 0.8490566, b: 0, a: 1}
+    rgba: 4281530112
+  m_fontColor: {r: 0, g: 0.96981126, b: 0.19585392, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.4
+  m_fontSize: 0.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0.37081438, w: 0}
+  m_margin: {x: 0, y: 0, z: 0.042500734, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -190,6 +190,7 @@ MonoBehaviour:
   _spinSpeed: 180
   _backgroundCanvas: {fileID: 1880043954186316394}
   _labelCanvas: {fileID: 7054073102895513691}
+  _label: {fileID: 786983299947876194}
 --- !u!136 &5909813383138352870
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -225,8 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ab680a5a260a04b9521a71774a5166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Game.Components.LevelGenerate.PickupTrigger
-  _playerTag: Player
-  _pool: {fileID: 0}
+  _poolManager: {fileID: 0}
 --- !u!1 &6436674421887016736
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +254,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6436674421887016736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.299}
+  m_LocalPosition: {x: 0, y: 0, z: 0.3}
   m_LocalScale: {x: 0.79999995, y: 0.79999995, z: 0.79999995}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -517,8 +517,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.236, y: 0.067}
-  m_SizeDelta: {x: 1.25, y: 1}
+  m_AnchoredPosition: {x: 0.349, y: -0.073}
+  m_SizeDelta: {x: 1.47, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6552339766169244964
 Canvas:

@@ -13,16 +13,19 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         private readonly ISettingsProvider _settingsProvider;
         private readonly UIGameplayRootPresenter _rootPresenter;
         private readonly LevelManager _levelManager;
+        private readonly ScoreManager _scoreManager;
         public GameplayUIManager(
             AudioManager audioManager,
             ISettingsProvider settingsProvider,
             UIGameplayRootPresenter rootPresenter,
-            LevelManager levelManager)
+            LevelManager levelManager,
+            ScoreManager scoreManager)
         {
             _audioManager = audioManager;
             _settingsProvider = settingsProvider;
             _rootPresenter = rootPresenter;
             _levelManager = levelManager;
+            _scoreManager = scoreManager;
         }
 
         /// <summary>
@@ -44,7 +47,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         /// <returns>Презентер геймплея.</returns>
         public ScreenGameplayPresenter OpenGameplayPresenter()
         {
-            var presenter = new ScreenGameplayPresenter(this, _settingsProvider, _levelManager);
+            var presenter = new ScreenGameplayPresenter(this, _settingsProvider, _levelManager, _scoreManager);
 
             _rootPresenter.OpenScreen(presenter);
 

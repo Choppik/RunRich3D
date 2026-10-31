@@ -1,7 +1,8 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 
-namespace MyBuild.Scripts.Game.Components.LevelGenerate.LevelCore
+namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
     public class PickupView : MonoBehaviour
     {
@@ -12,6 +13,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate.LevelCore
         [Header("Канвасы (биллборд только по горизонтали)")]
         [SerializeField] private Transform _backgroundCanvas;
         [SerializeField] private Transform _labelCanvas;
+        [SerializeField] private TextMeshProUGUI _label;
 
         private Camera _camera;
 
@@ -25,6 +27,15 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate.LevelCore
         {
             SpinModel();
             FaceCanvases();
+        }
+
+        /// <summary>
+        /// Изменение значения у пинапа.
+        /// </summary>
+        public void SetPickupValue(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+                _label.text = value;
         }
 
         private void SpinModel()

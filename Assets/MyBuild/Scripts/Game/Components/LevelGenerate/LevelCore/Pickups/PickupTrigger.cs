@@ -1,6 +1,5 @@
 ﻿using MyBuild.Scripts.Game.Common;
 using R3;
-using System;
 using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Components.LevelGenerate
@@ -21,6 +20,11 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         public bool IsCollected { get; private set; }
 
         /// <summary>
+        /// Ценность пинапа: прибавляется или списывается при подборе.
+        /// </summary>
+        public int Value { get; private set; }
+
+        /// <summary>
         /// Стреляет один раз при подборе, до возврата в пул.
         /// </summary>
         public Observable<PickupTrigger> CollectedAndReturned => _collectedAndReturned;
@@ -37,7 +41,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag(AppConsts.Player))
+            if (IsCollected || !other.CompareTag(AppConsts.Player))
                 return;
 
             IsCollected = true;
@@ -55,11 +59,12 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         /// Прописывается зоной спавна в момент выдачи из пула,
         /// чтобы тип переживал переиспользование объекта из пула.
         /// </summary>
-        public void Init(bool isPositive, PoolManager pool)
+        public void Init(bool isPositive, PoolManager pool, int value)
         {
             IsPositive = isPositive;
             IsCollected = false;
             _poolManager = pool;
+            Value = value;
         }
     }
 }

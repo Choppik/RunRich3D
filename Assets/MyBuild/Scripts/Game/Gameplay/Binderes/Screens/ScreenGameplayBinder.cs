@@ -1,9 +1,9 @@
 ﻿using MyBuild.Scripts.Utils.MVP.UI;
 using R3;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.InputSystem;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.U2D;
 using UnityEngine.UI;
@@ -20,33 +20,18 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
         [SerializeField] private Image _imageKeys;
         [SerializeField] private Image _imageBack;
         [SerializeField] private Image[] _imagesBackGroundBlack;
+        [SerializeField] private TextMeshProUGUI _labelCurrentScore;
 
-        private Camera _cam;
-        private Vector3 _storedRotation; // сохраняем ваш «красивый» поворот из редактора
-
-        private CharacterController _controller;
-        private GameObject _player;
-        private int _groundLayerMask;
-
-        void Awake()
+        private void Awake()
         {
             _objBack.SetActive(false);
             // Запустить загрузку атласа и назначение спрайтов
             StartCoroutine(LoadAtlasAndAssign());
         }
 
-        void Start()
+        public void UpdateCurrentScore(string value)
         {
-            
-        }
-
-
-        private void LateUpdate()
-        {
-        }
-
-        void Update()
-        {
+            if (!string.IsNullOrEmpty(value)) _labelCurrentScore.text = value;
         }
 
         private IEnumerator LoadAtlasAndAssign()
@@ -64,7 +49,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
             }
             else
             {
-                Debug.LogError($"PopupPreviewBinder: failed to load atlas at '{_atlasAddress}': {handle.OperationException}");
+                Debug.LogError($"{nameof(PopupPreviewBinder)}: failed to load atlas at '{_atlasAddress}': {handle.OperationException}");
             }
         }
 

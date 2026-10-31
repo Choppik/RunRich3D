@@ -85,11 +85,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 6b02c228afe9de24d89a2f8a114db9e2
-    m_Address: VariantDollars
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7a5849ced8eba8740858a2f2851e2102
     m_Address: Door1
     m_ReadOnly: 0

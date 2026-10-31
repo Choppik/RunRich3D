@@ -1,5 +1,4 @@
 ﻿using MyBuild.Scripts.Game.Common;
-using MyBuild.Scripts.Utils;
 using R3;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +6,9 @@ using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
+    /// <summary>
+    /// Генератор уровня.
+    /// </summary>
     public class LevelGenerator : MonoBehaviour
     {
         [Header("Mode")]
@@ -18,10 +20,8 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         [SerializeField, Min(1)] private int _minTurnsPerChunk = 1;          // минимум поворотов на чанк
         [SerializeField, Range(0, 100)] private int _extraTurnChance = 40;
 
-        [Header("Tiers")]
-        [SerializeField] private TierType _currentRoadTier = TierType.Casual;
-        [SerializeField] private TierType _currentDoorTier = TierType.Poor;
-        [SerializeField] private TierType _currentPlayerTier = TierType.Casual;
+        [Header("Tier")]
+        [SerializeField] private TierType _currentTier = TierType.Poor;
 
         [Header("Fixed Sequence (S=прямая, T=поворот, D=дверь)")]
         [SerializeField] private string _fixedSequence = "SDTSTSTSTD";
@@ -56,7 +56,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         private void Awake()
         {
 #if !DEBUG
-        _mode = GenMode.Fixed;
+            _mode = GenMode.Fixed;
 #else
             _mode = GenMode.Random;
 #endif
@@ -71,10 +71,12 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
 
         private void OnDestroy()
         {
-            ClearLevel(); // TODO: Возможно, убрать из OnDestroy
             _compositeDisposable.Dispose();
         }
 
+        /// <summary>
+        /// Установка параметра движения игрока.
+        /// </summary>
         public void SetMovement(bool value)
         {
             if (_playerInstance == null) return;
@@ -359,7 +361,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             var firstNode = _active.First;
             if (firstNode != null && firstNode.Value.seg is RoadSegment firstRoad)
             {
-                _playerInstance = _poolManager.Spawn("Player", firstRoad.ConnectPoint.position, firstRoad.ConnectPoint.rotation);
+                _playerInstance = _poolManager.Spawn(AppConsts.Player, firstRoad.ConnectPoint.position, firstRoad.ConnectPoint.rotation);
 
                 if (_playerInstance.TryGetComponent(out PlayerController controller))
                 {
@@ -391,37 +393,38 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         {
             return type switch
             {
-                TypeSequence.Straight => "Ground",
+                TypeSequence.Straight => AppConsts.Ground,
                 TypeSequence.Turn => flip switch
                 {
-                    true => "GroundL",
-                    false => "GroundR",
+                    true => AppConsts.GroundL,
+                    false => AppConsts.GroundR,
                 },
-                TypeSequence.Door => _currentDoorTier switch
+                TypeSequence.Door => _currentTier switch
                 {
-                    TierType.Poor => "Door1",
-                    TierType.Casual => "Door2",
-                    TierType.Rich => "Door3",
-                    TierType.Millionaire => "Door4",
+                    TierType.Poor => AppConsts.Door1,
+                    TierType.Casual => AppConsts.Door2,
+                    TierType.Rich => AppConsts.Door3,
+                    TierType.Millionaire => AppConsts.Door4,
                     _ => null,
                 },
-                TypeSequence.End => "GroundEND",
+                TypeSequence.End => AppConsts.GroundEND,
                 _ => null,
             };
         }
 
-        public void ApplyTiers(TierType roadTier, TierType doorTier, TierType playerTire)
+        /// <summary>
+        /// Применение нового тира.
+        /// </summary>
+        public void ApplyTiers(TierType newTier)
         {
-            if (roadTier == TierType.Poor)
+            _currentTier = newTier;
+
+            if (_playerInstance != null && _playerInstance.TryGetComponent(out MeshSwapper meshSwapper))
             {
-
+                meshSwapper.SetTier(newTier);
             }
-            //_currentRoadTier = Mathf.Clamp(roadTier, 0, 2);
-            //_currentDoorTier = Mathf.Clamp(doorTier, 0, 2);
-            //_currentPlayerTier = Mathf.Clamp(doorTier, 0, 2);
 
-            // Меняем тир только для еще не созданных сегментов
-            // (уже созданные остаются как есть до возврата в пул)
+            // TODO: Вызвать метод, устанавливающий нужный декор.
         }
 
         /// <summary>
