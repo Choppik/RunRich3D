@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using MyBuild.Scripts.Game.Common;
+using R3;
+using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Components.LevelGenerate
 {
@@ -14,8 +16,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         [SerializeField] private Transform _leftDoor;
         [SerializeField] private Transform _rightDoor;
 
-        [Tooltip("Триггер перед дверью")]
-        [SerializeField] private Collider _doorTrigger;
+        [SerializeField, Range(1, 5)] private int _doorXValue;
 
         [Header("Visuals")]
         [SerializeField] private float _openAngle = 90f;
@@ -29,11 +30,18 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         private Quaternion _leftOpen;
         private Quaternion _rightOpen;
 
+        /// <summary>
+        /// Срабатывает при открытии двери.
+        /// </summary>
+        public static Observable<int> OnOpenDoor => _onOpenDoor;
+
+        private static readonly Subject<int> _onOpenDoor = new();
+
         public bool IsFinalDoor => _isFinalDoor;
 
         public bool IsOpen => _isOpen;
 
-        private void Start()
+        private void Awake()
         {
             if (_leftDoor != null) _leftClosed = _leftDoor.localRotation;
             if (_rightDoor != null) _rightClosed = _rightDoor.localRotation;
@@ -53,9 +61,14 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             }
         }
 
+        private void OnDisable()
+        {
+            ResetDoor();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (!other.CompareTag(AppConsts.Player)) return;
             if (!_playerReached)
             {
                 NotifyPlayerEntered();
@@ -65,11 +78,29 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         }
 
         /// <summary>
+        /// Полный сброс двери в закрытое состояние.
+        /// Вызывается автоматически при деспавне (OnDisable)
+        /// и вручную — при выдаче из пула, если нужно.
+        /// </summary>
+        public void ResetDoor()
+        {
+            _isOpen = false;
+            _playerReached = false;
+
+            if (_leftDoor != null)
+                _leftDoor.localRotation = _leftClosed;
+
+            if (_rightDoor != null)
+                _rightDoor.localRotation = _rightClosed;
+        }
+
+        /// <summary>
         /// Проверяет шкалу и открывает либо останавливает игру.
         /// </summary>
         public void TryOpen()
         {
-               _isOpen = true; // TODO: Отключать при деспавне.
+             _isOpen = true;
+            _onOpenDoor.OnNext(_doorXValue);
             //float scale = ScoreManager.Instance != null ? ScoreManager.Instance.GetNormalizedScale() : 0f;
             //
             //if (scale >= requiredScale)

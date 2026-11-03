@@ -1,6 +1,7 @@
 ﻿using MyBuild.Scripts.Game.Gameplay.Presenters;
 using MyBuild.Scripts.Game.GameRoot;
 using MyBuild.Scripts.Game.Settings;
+using MyBuild.Scripts.Game.State.Providers;
 
 namespace MyBuild.Scripts.Game.Gameplay.Managers
 {
@@ -14,18 +15,21 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         private readonly UIGameplayRootPresenter _rootPresenter;
         private readonly LevelManager _levelManager;
         private readonly ScoreManager _scoreManager;
+        private readonly IGameStateProvider _gameState;
         public GameplayUIManager(
             AudioManager audioManager,
             ISettingsProvider settingsProvider,
             UIGameplayRootPresenter rootPresenter,
             LevelManager levelManager,
-            ScoreManager scoreManager)
+            ScoreManager scoreManager,
+            IGameStateProvider gameState)
         {
             _audioManager = audioManager;
             _settingsProvider = settingsProvider;
             _rootPresenter = rootPresenter;
             _levelManager = levelManager;
             _scoreManager = scoreManager;
+            _gameState = gameState;
         }
 
         /// <summary>
@@ -67,11 +71,23 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         }
 
         /// <summary>
-        /// Открытие стартого вспомогательного окна.
+        /// Открытие стартового вспомогательного окна.
         /// </summary>
         public PopupStartPresenter OpenStartPresenter()
         {
             var presenter = new PopupStartPresenter(this, _settingsProvider);
+
+            _rootPresenter.OpenPopup(presenter);
+        
+            return presenter;
+        }
+
+        /// <summary>
+        /// Открытие вспомогательного окна конца уровня.
+        /// </summary>
+        public PopupEndLevelPresenter OpenEndLevelPresenter(ScreenGameplayPresenter screenPresenter)
+        {
+            var presenter = new PopupEndLevelPresenter(this, _settingsProvider, _gameState, screenPresenter);
 
             _rootPresenter.OpenPopup(presenter);
         

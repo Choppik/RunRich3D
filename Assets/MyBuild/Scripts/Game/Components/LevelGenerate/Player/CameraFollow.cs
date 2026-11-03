@@ -41,6 +41,23 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxAngleThisFrame);
         }
 
-        public void SetTarget(Transform target) => _target = target;
+        public void SetTarget(Transform target)
+        {
+            _target = target;
+
+            Vector3 immediatePosition = _target.position + _target.TransformDirection(_positionOffset);
+            transform.position = immediatePosition;
+
+            // Сразу считаем точку взгляда
+            Vector3 immediateLookTarget = _target.position + _target.TransformDirection(_lookOffset);
+            Vector3 immediateLookDirection = immediateLookTarget - transform.position;
+
+            if (immediateLookDirection.sqrMagnitude > 0.001f)
+            {
+                // Сразу ставим правильный поворот (без сглаживания)
+                Quaternion immediateRotation = Quaternion.LookRotation(immediateLookDirection, _target.up);
+                transform.rotation = immediateRotation;
+            }
+        }
     }
 }

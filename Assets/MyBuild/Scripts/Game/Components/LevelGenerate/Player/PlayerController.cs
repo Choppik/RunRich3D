@@ -1,5 +1,4 @@
-﻿using R3;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;          // основное API новой системы ввода
 using UnityEngine.InputSystem.EnhancedTouch; // расширенная работа с касаниями
 
@@ -33,7 +32,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         private RoadSegmentSpline _nextSpline;
         private float _distanceAlongSpline = 0f;
         private float _splineLength = 0f;
-        private readonly CompositeDisposable _compositeDisposable = new();
 
         // Для тач-ввода: храним «последнее активное касание», чтобы
         // вести его от начала жеста до конца, а не брать случайный палец
@@ -56,7 +54,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
 
         private void OnDestroy()
         {
-            _compositeDisposable.Dispose();
             // Симметрично выключаем, чтобы не оставлять подсистему включённой
             // после уничтожения единственного потребителя
             EnhancedTouchSupport.Disable();
@@ -190,6 +187,65 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             transform.position = finalPos;
         }
 
+
+        /// <summary>
+        /// Проецирует текущую позицию игрока на сплайн и начинает движение с этой точки.
+        /// </summary>
+        /// <remarks>Вызывать один раз после спавна, до включения _isMoving.</remarks>
+        public void SnapToSpline()
+        {
+            if (_currentSpline == null) return;
+
+            if (_splineLength <= 0f)
+            {
+                _splineLength = _currentSpline.GetLength();
+                if (_splineLength <= 0f) return;
+            }
+
+            // Грубый поиск: семплируем сплайн и ищем ближайшую точку
+            const int samples = 200;
+            float bestT = 0f;
+            float bestDistSq = float.MaxValue;
+
+            for (int i = 0; i <= samples; i++)
+            {
+                float t = i / (float)samples;
+                float distSq = (transform.position - _currentSpline.GetPoint(t)).sqrMagnitude;
+
+                if (distSq < bestDistSq)
+                {
+                    bestDistSq = distSq;
+                    bestT = t;
+                }
+            }
+
+            // Уточнение: дожимаем бинарным поиском между соседними семплами,
+            // чтобы не было видимого «подскока» на granularity
+            float step = 1f / samples;
+            float low = Mathf.Max(0f, bestT - step);
+            float high = Mathf.Min(1f, bestT + step);
+
+            for (int i = 0; i < 20; i++)
+            {
+                float mid = (low + high) * 0.5f;
+                float distLow = (transform.position - _currentSpline.GetPoint(low)).sqrMagnitude;
+                float distMid = (transform.position - _currentSpline.GetPoint(mid)).sqrMagnitude;
+
+                if (distMid < distLow)
+                    low = mid;
+                else
+                    high = mid;
+            }
+
+            bestT = (low + high) * 0.5f;
+            _distanceAlongSpline = bestT * _splineLength;
+
+            // Опционально: выровнять поворот по касательной, чтобы не было
+            // разворота через RotateTowards в первый кадр
+            Vector3 tangent = _currentSpline.GetTangent(bestT).normalized;
+            transform.rotation = Quaternion.LookRotation(tangent, Vector3.up);
+        }
+
         public void SetStartRoad(RoadSegmentSpline segmentSpline)
         {
             _currentSpline = segmentSpline;
@@ -200,6 +256,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         /// </summary>
         public void StartMovement()
         {
+            SnapToSpline();
             _isMoving = true;
         }
 

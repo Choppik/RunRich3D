@@ -389,12 +389,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MyBuild.Scripts.Utils.LevelGenerate.DoorSegment
   _entryPoint: {fileID: 2135497756650204316}
   _exitPoint: {fileID: 6535839408853179638}
-  _type: 0
-  _tire: 0
+  _pickupSpawnZone: {fileID: 0}
+  _type: 1
+  _tire: 1
   _requiredScale: 0.3
   _leftDoor: {fileID: 845885324870828011}
   _rightDoor: {fileID: 8785746517379793765}
-  _doorTrigger: {fileID: 7117067643249252349}
+  _doorXValue: 2
   _openAngle: 90
   _openSpeed: 2
   _isFinalDoor: 0

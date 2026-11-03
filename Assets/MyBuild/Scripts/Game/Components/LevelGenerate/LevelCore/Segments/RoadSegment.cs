@@ -11,6 +11,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
     {
         [Header("Road")]
         [SerializeField] private RoadShape _shape = RoadShape.Straight;
+        [SerializeField] private Transform _playerSpawn;
 
         [Header("Bounds (относительно центра дороги)")]
         [Tooltip("Левая граница по X")]
@@ -37,6 +38,8 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         // Ссылки (заполняются LevelGenerator'ом)
         [HideInInspector] public DoorSegment nextDoor;
         [HideInInspector] public bool isLastBeforeEnd = false;
+
+        public Transform PlayerSpawn => _playerSpawn;
 
         private void OnTriggerEnter(Collider other)
         {

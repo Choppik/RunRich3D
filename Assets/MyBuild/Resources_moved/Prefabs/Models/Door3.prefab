@@ -81,7 +81,7 @@ MonoBehaviour:
   _requiredScale: 0.3
   _leftDoor: {fileID: 186633457703449192}
   _rightDoor: {fileID: 7343715089381819180}
-  _doorTrigger: {fileID: 322036603083094708}
+  _doorXValue: 4
   _openAngle: 90
   _openSpeed: 2
   _isFinalDoor: 0

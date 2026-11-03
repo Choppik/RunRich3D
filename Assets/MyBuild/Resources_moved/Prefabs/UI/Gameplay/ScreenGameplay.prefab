@@ -694,6 +694,7 @@ MonoBehaviour:
   - {fileID: 6356598524197023816}
   - {fileID: 7742539586330324466}
   _labelCurrentScore: {fileID: 6796380420944315493}
+  _labelCurrentLevel: {fileID: 947276221057676073}
 --- !u!1 &8072934689160977183
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,12 +21,18 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
         [SerializeField] private Image _imageBack;
         [SerializeField] private Image[] _imagesBackGroundBlack;
         [SerializeField] private TextMeshProUGUI _labelCurrentScore;
+        [SerializeField] private TextMeshProUGUI _labelCurrentLevel;
 
         private void Awake()
         {
             _objBack.SetActive(false);
             // Запустить загрузку атласа и назначение спрайтов
             StartCoroutine(LoadAtlasAndAssign());
+        }
+
+        public void SetCurrentLevel(string value)
+        {
+            if (!string.IsNullOrEmpty(value)) _labelCurrentLevel.text = $"Уровень {value}";
         }
 
         public void UpdateCurrentScore(string value)

@@ -55,11 +55,12 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
                 _levelGenerator.SetLevelParams(levelSetting.DoorCount, levelSetting.ChanceDoor, levelSetting.MinTurnsPerChunk, levelSetting.ExtraTurnChance);
             }
 
-            _coroutine.StartCoroutine(_levelGenerator.GenerateLevel());
+             _coroutine.StartCoroutine(_levelGenerator.GenerateLevel());
         }
 
         public void StartLevel(int level) // TODO: Правка нужна
         {
+            _scoreManager.Reset();
             var map = _gameState.GameState.GetGurrentMap();
             if (map != null)
             {
@@ -74,6 +75,11 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         public void Run()
         {
             _levelGenerator.SetMovement(true);
+        }
+
+        public void Stop()
+        {
+            _levelGenerator.SetMovement(false);
         }
 
         public void StartCurrentLevel()

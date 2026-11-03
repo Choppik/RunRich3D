@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: c3902165f1fa8514e83fb4df5cfd467a
   m_SerializeEntries:
   - m_GUID: 670fe0ad087f75a4ca60f6f2c8f38e46
-    m_Address: ScreenGameplay
+    m_Address: PopupEndLevel
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -25,8 +25,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6b223d00e427b040885b0d33d04b415
+    m_Address: GameplayUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cb79cafb72e08ee41819c8fa6aeb1614
     m_Address: ScreenMainMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dca3904948d36dc44ba0c358abb70710
+    m_Address: ScreenGameplay
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

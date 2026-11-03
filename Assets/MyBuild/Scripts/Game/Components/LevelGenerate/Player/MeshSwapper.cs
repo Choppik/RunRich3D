@@ -26,6 +26,11 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             UpdateMeshVisibility(TierType.Poor);
         }
 
+        private void OnDisable()
+        {
+            UpdateMeshVisibility(TierType.Poor);
+        }
+
         /// <summary>
         /// Смена тира.
         /// </summary>

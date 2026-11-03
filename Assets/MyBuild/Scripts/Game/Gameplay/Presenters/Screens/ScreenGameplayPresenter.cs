@@ -42,13 +42,13 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
         private void BindSubscriptions()
         {
             _scoreManager.OnScoreChanged.Subscribe(OnScoreChange).AddTo(_compositeDisposable);
+            EndTrigger.OnEndLevel.Subscribe(_ => LevelEnd()).AddTo(_compositeDisposable);
         }
 
         public void RunCurrenLevel(bool value)
         {
             if (value)
             {
-                // TODO: Запуск контроллера плеера
                 if (_levelManager.IsLevelGenerate)
                 {
                     _levelManager.Run();
@@ -56,18 +56,23 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
             }
         }
 
-        public void RunNextLevel(bool value)
+        public void RunNextLevel(int nextLevel)
         {
-            if (value)
-            {
-                // TODO: Запуск контроллера плеера + генерация следующего уровня.
-                //_levelManager.StartCurrentLevel();
-            }
+            _levelManager.StartLevel(nextLevel);
+            Binder.SetCurrentLevel(nextLevel.ToString());
+            _manager.OpenPreviewPresenter(this);
         }
 
         private void OnScoreChange(int value)
         {
             Binder.UpdateCurrentScore(value.ToString());
+        }
+
+        private void LevelEnd()
+        {
+            // TODO: Запуспк анимации, звуков и окна конца
+            _levelManager.Stop();
+            _manager.OpenEndLevelPresenter(this);
         }
 
         public override void Dispose()

@@ -12,8 +12,8 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
     public class QualityManager : IDisposable
     {
         public TierType CurrentTier { get; private set; } = TierType.Poor;
-        private LevelGenerator _levelGen;
-        private ScoreManager _scoreManager;
+        private readonly LevelGenerator _levelGen;
+        private readonly ScoreManager _scoreManager;
         private readonly CompositeDisposable _compositeDisposable = new();
 
         public QualityManager(LevelGenerator levelGen, ScoreManager scoreManager)
@@ -28,7 +28,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         public void ReadyQualityManager()
         {
             _scoreManager.OnScoreChanged.Subscribe(OnTierChanged).AddTo(_compositeDisposable);
-            ApplyTiers();
+            ApplyTiers(); // TODO: Нужно передавать знаение через OnTierChanged
         }
 
         /// <summary>
@@ -38,9 +38,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         {
             if (value == 0 || _scoreManager == null) return;
 
-            float v = value;
-
-            float percentage = (v / _scoreManager.MaxScore) * 100f;
+            float percentage = ((float)value / _scoreManager.MaxScore) * 100f;
 
             // Опционально: ограничиваем диапазон от 0 до 100, если значения могут выходить за пределы
             var result = Mathf.Clamp(percentage, 0f, 100f);

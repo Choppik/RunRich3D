@@ -24,7 +24,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         [SerializeField] private TierType _currentTier = TierType.Poor;
 
         [Header("Fixed Sequence (S=прямая, T=поворот, D=дверь)")]
-        [SerializeField] private string _fixedSequence = "SDTSTSTSTD";
+        [SerializeField] private string _fixedSequence = "SDTSTSTD";
 
         [Header("Streaming Window")]
         [Tooltip("Сколько сегментов держать впереди игрока")]
@@ -123,6 +123,8 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             }
 
             yield return SpawnPlayer();
+
+            SetMovement(false);
 
             IsGenerationComplete = true;
             Debug.Log($"[{nameof(LevelGenerator)}] Стриминг запущен: {_sequence.Count} сегментов в очереди, {_active.Count} активно.");
@@ -361,7 +363,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             var firstNode = _active.First;
             if (firstNode != null && firstNode.Value.seg is RoadSegment firstRoad)
             {
-                _playerInstance = _poolManager.Spawn(AppConsts.Player, firstRoad.ConnectPoint.position, firstRoad.ConnectPoint.rotation);
+                _playerInstance = _poolManager.Spawn(AppConsts.Player, firstRoad.PlayerSpawn.position, firstRoad.PlayerSpawn.rotation);
 
                 if (_playerInstance.TryGetComponent(out PlayerController controller))
                 {
@@ -432,6 +434,8 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         /// </summary>
         public void ClearLevel()
         {
+            _currentTier = TierType.Poor;
+            _playerSegmentIndex = -1;
             while (_active.Count > 0)
             {
                 var seg = _active.First.Value;
@@ -447,6 +451,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
 
                 ReturnToPool(seg.obj);
             }
+            _activeIndices.Clear();
 
             // Уничтожаем игрока
             if (_playerInstance != null)

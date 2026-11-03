@@ -11,7 +11,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
     public class ScoreManager : IDisposable
     {
         private int _score;
-        public int MaxScore { get; private set; } = 1000;
+        public int MaxScore { get; private set; } = 5000;
 
         public Observable<int> OnScoreChanged => _onScoreChanged;
         private readonly Subject<int> _onScoreChanged = new();
@@ -36,6 +36,10 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         {
             PickupTrigger.OnCollected
                 .Subscribe(OnPickupCollected)
+                .AddTo(_compositeDisposable);
+
+            DoorSegment.OnOpenDoor
+                .Subscribe(MultiplyScore)
                 .AddTo(_compositeDisposable);
         }
 
@@ -79,6 +83,13 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         private void AddScore(int amount)
         {
             _score += amount;
+            _score = Mathf.Clamp(_score, 0, MaxScore);
+            _onScoreChanged.OnNext(_score);
+        }
+
+        private void MultiplyScore(int amount)
+        {
+            _score *= amount;
             _score = Mathf.Clamp(_score, 0, MaxScore);
             _onScoreChanged.OnNext(_score);
         }
