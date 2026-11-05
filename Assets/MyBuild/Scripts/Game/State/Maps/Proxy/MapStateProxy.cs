@@ -1,7 +1,4 @@
-﻿using R3;
-using System.Linq;
-using ObservableCollections;
-using MyBuild.Scripts.Game.State.Entities;
+﻿using MyBuild.Scripts.Game.State.Entities;
 
 namespace MyBuild.Scripts.Game.State
 {
@@ -18,33 +15,13 @@ namespace MyBuild.Scripts.Game.State
         {
             Origin = mapState;
 
-            // Перебор объектов оригинального сотояния и создания их оберток.
-            mapState.ProgressPlayers.ForEach(pictureOrigin => Dataes.Add(new ProgressPlayerProxy(pictureOrigin)));
-
-            /// В данном месте нужна подписка, если во время игры что-то будет добавлятся.
-
-            // Подписываемся на добавление в список новых объектов и добавляем их сразу в оригинальное состояние.
-            Dataes.ObserveAdd().Subscribe(e =>
-            {
-                var addedBuildingEntity = e.Value;
-                mapState.ProgressPlayers.Add(addedBuildingEntity.Origin);
-            });
-
-            // Подписываемся на удаление объеков.
-            Dataes.ObserveRemove().Subscribe(e =>
-            {
-                var removeBuildingEntityProxy = e.Value;
-                var removeBuildingEntity = mapState.ProgressPlayers.FirstOrDefault(b => b.Id == removeBuildingEntityProxy.Id);
-                mapState.ProgressPlayers.Remove(removeBuildingEntity);
-            });
-
-            ///
+            Progress = new ProgressPlayerProxy(mapState.ProgressPlayer);
         }
 
         /// <summary>
-        /// Список всех данных.
+        /// Данные игрока.
         /// </summary>
-        public ObservableList<ProgressPlayerProxy> Dataes { get; } = new();
+        public ProgressPlayerProxy Progress { get; }
 
         /// <summary>
         /// Ориганальное состояние карты.

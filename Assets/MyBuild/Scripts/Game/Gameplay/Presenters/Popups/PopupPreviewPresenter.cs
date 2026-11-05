@@ -7,7 +7,7 @@ using R3;
 namespace MyBuild.Scripts.Game.Gameplay.Presenters
 {
     /// <summary>
-    /// Презентер стартого окна.
+    /// Презентер окна перед самой игрой.
     /// </summary>
     public class PopupPreviewPresenter : WindowPresenterBase
     {
@@ -53,8 +53,6 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
         private readonly GameplayUIManager _manager;
         private readonly ISettingsProvider _settingsProvider;
         private readonly ScreenGameplayPresenter _screenPresenter;
-
-        // Все подписки.
         private readonly CompositeDisposable _compositeDisposable = new();
     }
 }

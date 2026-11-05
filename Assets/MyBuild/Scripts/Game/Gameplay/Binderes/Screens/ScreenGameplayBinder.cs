@@ -22,6 +22,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
         [SerializeField] private Image[] _imagesBackGroundBlack;
         [SerializeField] private TextMeshProUGUI _labelCurrentScore;
         [SerializeField] private TextMeshProUGUI _labelCurrentLevel;
+        [SerializeField] private TextMeshProUGUI _labelCurrentCurrency;
 
         private void Awake()
         {
@@ -38,6 +39,11 @@ namespace MyBuild.Scripts.Game.Gameplay.Binderes
         public void UpdateCurrentScore(string value)
         {
             if (!string.IsNullOrEmpty(value)) _labelCurrentScore.text = value;
+        }
+
+        public void UpdateCurrency(string value)
+        {
+            if (!string.IsNullOrEmpty(value)) _labelCurrentCurrency.text = value;
         }
 
         private IEnumerator LoadAtlasAndAssign()

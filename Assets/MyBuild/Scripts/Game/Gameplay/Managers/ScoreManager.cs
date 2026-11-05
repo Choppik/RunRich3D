@@ -10,7 +10,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
     /// </summary>
     public class ScoreManager : IDisposable
     {
-        private int _score;
+        public int Score { get; private set; }
         public int MaxScore { get; private set; } = 5000;
 
         public Observable<int> OnScoreChanged => _onScoreChanged;
@@ -27,7 +27,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         /// <summary>
         /// Установка начального значения счёта.
         /// </summary>
-        public void SetScore(int startScore) => _score = startScore;
+        public void SetScore(int startScore) => Score = startScore;
 
         /// <summary>
         /// Подписка на статический поток подборов. Вызвать один раз при старте забега.
@@ -58,7 +58,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         {
             AddScore(value);
             _onCollectPositive.OnNext(Unit.Default);
-            Debug.Log($"[{nameof(ScoreManager)}] +{value}. Счёт: {_score}.");
+            Debug.Log($"[{nameof(ScoreManager)}] +{value}. Счёт: {Score}.");
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         {
             AddScore(-value);
             _onCollectNegative.OnNext(Unit.Default);
-            Debug.Log($"[{nameof(ScoreManager)}] -{value}. Счёт: {_score}.");
+            Debug.Log($"[{nameof(ScoreManager)}] -{value}. Счёт: {Score}.");
         }
 
         /// <summary>
@@ -76,22 +76,22 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         /// </summary>
         public void Reset()
         {
-            _score = 0;
-            _onScoreChanged.OnNext(_score);
+            Score = 0;
+            _onScoreChanged.OnNext(Score);
         }
 
         private void AddScore(int amount)
         {
-            _score += amount;
-            _score = Mathf.Clamp(_score, 0, MaxScore);
-            _onScoreChanged.OnNext(_score);
+            Score += amount;
+            Score = Mathf.Clamp(Score, 0, MaxScore);
+            _onScoreChanged.OnNext(Score);
         }
 
         private void MultiplyScore(int amount)
         {
-            _score *= amount;
-            _score = Mathf.Clamp(_score, 0, MaxScore);
-            _onScoreChanged.OnNext(_score);
+            Score *= amount;
+            Score = Mathf.Clamp(Score, 0, MaxScore);
+            _onScoreChanged.OnNext(Score);
         }
 
         /// <summary>

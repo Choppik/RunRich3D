@@ -105,31 +105,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             _segmentIndex = -1;
         }
 
-
-        /// <summary>
-        /// Направление движения дороги в заданной мировой точке.
-        /// Ось сегментов направлена против движения, поэтому forward точек инвертируется.
-        /// </summary>
-        public Vector3 GetMoveDirectionAt(Vector3 worldPos)
-        {
-            Vector3 entryDir = -ConnectPoint.forward;
-            Vector3 exitDir = -LeavePoint.forward;
-
-            Vector3 localEntry = transform.InverseTransformPoint(ConnectPoint.position);
-            Vector3 localExit = transform.InverseTransformPoint(LeavePoint.position);
-            Vector3 localPos = transform.InverseTransformPoint(worldPos);
-
-            float t = Mathf.InverseLerp(localEntry.z, localExit.z, localPos.z);
-            t = Mathf.Clamp01(t);
-
-            // ВАЖНО: Просто берем направление. Если нужна дуга - оставь Lerp, 
-            // но проблема "недоповорота" решается не здесь, а в Move().
-            Vector3 dir = Vector3.Lerp(entryDir, exitDir, t);
-
-            dir.y = 0f;
-            return dir.sqrMagnitude > 0.001f ? dir.normalized : dir;
-        }
-
         /// <summary>
         /// Спавнит контент сегмента. Вызывать ПОСЛЕ AlignEntryTo,
         /// когда позиция и поворот сегмента уже финальные.
@@ -160,7 +135,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         /// </summary>
         protected void NotifyPlayerEntered()
         {
-            Debug.Log($"Обработчик сегмента сработал {nameof(NotifyPlayerEntered)}");
             if (_activated) return;
             _activated = true;
             _playerEnteredCallback.OnNext(_segmentIndex);

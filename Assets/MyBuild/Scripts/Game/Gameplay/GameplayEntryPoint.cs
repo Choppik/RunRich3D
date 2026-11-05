@@ -22,7 +22,7 @@ namespace MyBuild.Scripts.Game.Gameplay
 
             if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
             {
-                Debug.LogError("[GameplayEntryPoint] Не удалось загрузить префаб PoolManager!");
+                Debug.LogError($"[{nameof(GameplayEntryPoint)}] Не удалось загрузить префаб PoolManager!");
                 yield break;
             }
 
@@ -59,6 +59,8 @@ namespace MyBuild.Scripts.Game.Gameplay
             // 5. Запускаем мир
             var worldPresenter = gameplayPresentationContainer.Resolve<WorldGameplayPresenter>();
             yield return worldPresenter.StartLevelGeneration();
+
+            // Здесь может происходить ручной Dispose сцены
         }
     }
 }

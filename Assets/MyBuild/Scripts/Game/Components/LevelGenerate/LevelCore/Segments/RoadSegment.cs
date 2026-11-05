@@ -1,5 +1,4 @@
 ﻿using MyBuild.Scripts.Game.Common;
-using MyBuild.Scripts.Utils.LevelGenerate;
 using UnityEngine;
 
 namespace MyBuild.Scripts.Game.Components.LevelGenerate
@@ -34,32 +33,12 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         [SerializeField] private Transform[] _savePoints;
         [Tooltip("Пустые объекты для полосы финиша")]
         [SerializeField] private Transform[] _finishPoints;
-
-        // Ссылки (заполняются LevelGenerator'ом)
-        [HideInInspector] public DoorSegment nextDoor;
-        [HideInInspector] public bool isLastBeforeEnd = false;
-
         public Transform PlayerSpawn => _playerSpawn;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (!other.CompareTag(AppConsts.Player)) return;
             NotifyPlayerEntered();
-        }
-
-        /// <summary>
-        /// Вызывается когда игрок дошёл до конца дороги.
-        /// </summary>
-        public void OnPlayerReachedEnd()
-        {
-            if (nextDoor != null)
-            {
-                nextDoor.TryOpen();
-            }
-            //else if (isLastBeforeEnd && endTrigger != null)
-            //{
-            //    endTrigger.OnPlayerReached();
-            //}
         }
 
         /// <summary>
@@ -71,13 +50,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             // Здесь можно менять материалы/модельки в зависимости от тира
             // Например, через Addressables подгрузить другой вариант
         }
-
-        /// <summary>
-        /// Границы для PlayerController в локальных координатах дороги.
-        /// </summary>
-        public float GetLeftBound() => _leftBound;
-        public float GetRightBound() => _rightBound;
-        public RoadShape GetRoadShape() => _shape;
 
         /// <summary>
         /// Получение координат точек декора на дороге.

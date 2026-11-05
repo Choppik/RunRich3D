@@ -64,9 +64,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
             var map = _gameState.GameState.GetGurrentMap();
             if (map != null)
             {
-                var data = map.Dataes.FirstOrDefault();
-
-                data?.CurrentLevel.OnNext(level);
+                map.Progress?.CurrentLevel.OnNext(level);
             }
 
             GenerateNewLevel();
@@ -92,12 +90,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
             var map = _gameState.GameState.GetGurrentMap();
             if (map != null)
             {
-                var data = map.Dataes.FirstOrDefault();
-
-                if (data != null)
-                {
-                    return data.CurrentLevel.CurrentValue;
-                }
+                return map.Progress.CurrentLevel.CurrentValue;
             }
             
             return 0;
@@ -106,6 +99,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         public void Dispose()
         {
             _levelGenerator.ClearLevel();
+            _poolManager.Cleanup();
         }
     }
 }

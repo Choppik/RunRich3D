@@ -85,13 +85,14 @@ namespace MyBuild.Scripts.Game.State.Providers
             var map = _gameStateOrigin.Maps.First(m => m.Tag == AppConsts.MAIN_MAP_TAG);
 
             // Добавляем все данные игроков.
-            map.ProgressPlayers.AddRange(new List<ProgressPlayer>() 
-            { 
-                new() 
-                { 
-                    Record = 0, CurrentLevel = 1, Currency = 40, Id = _gameStateOrigin.CreateEntityId() 
-                } 
-            });
+            map.ProgressPlayer =
+                new()
+                {
+                    Record = 0,
+                    CurrentLevel = 1,
+                    Currency = 40,
+                    Id = _gameStateOrigin.CreateEntityId()
+                };
 
             return new GameStateProxy(_gameStateOrigin);
         }
@@ -101,7 +102,6 @@ namespace MyBuild.Scripts.Game.State.Providers
         /// </summary>
         public GameStateProxy GameState { get; private set; }
 
-        // Ссылка на оригинальное состояние игры.
         private GameState _gameStateOrigin;
 
         private const string GAME_STATE_KEY = nameof(GAME_STATE_KEY);

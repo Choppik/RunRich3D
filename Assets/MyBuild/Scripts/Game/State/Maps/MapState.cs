@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MyBuild.Scripts.Game.State.Entities;
 
 namespace MyBuild.Scripts.Game.State
@@ -15,6 +14,6 @@ namespace MyBuild.Scripts.Game.State
         /// </summary>
         public string Tag;
 
-        public List<ProgressPlayer> ProgressPlayers = new();
+        public ProgressPlayer ProgressPlayer = new();
     }
 }

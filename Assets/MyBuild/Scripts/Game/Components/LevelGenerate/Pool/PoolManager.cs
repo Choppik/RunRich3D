@@ -39,7 +39,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         /// </summary>
         public bool IsReady { get; private set; } = false;
 
-        void Awake()
+        private void Awake()
         {
             if (_instance != null && _instance != this)
             {
@@ -48,11 +48,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             }
 
             _instance = this;
-        }
-
-        void OnDestroy()
-        {
-            Cleanup();
         }
 
         /// <summary>
@@ -78,7 +73,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
                 }
                 else
                 {
-                    Debug.LogError($"[Pool] Не удалось загрузить '{cfg.Address}'");
+                    Debug.LogError($"[{nameof(PoolManager)}] Не удалось загрузить '{cfg.Address}'");
                 }
             }
 
@@ -98,7 +93,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
             }
 
             IsReady = true;
-            Debug.Log("[Pool] Инициализация завершена.");
+            Debug.Log($"[{nameof(PoolManager)}] Инициализация завершена.");
         }
 
         /// <summary>

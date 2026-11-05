@@ -50,12 +50,11 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
         private int _playerSegmentIndex = -1;
         private GameObject _playerInstance;
         private readonly Dictionary<SegmentBase, System.IDisposable> _segmentSubscriptions = new();
-        private readonly CompositeDisposable _compositeDisposable = new();
         private bool _isUpdatingWindow;
 
         private void Awake()
         {
-#if !DEBUG
+#if DEBUG
             _mode = GenMode.Fixed;
 #else
             _mode = GenMode.Random;
@@ -67,11 +66,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
                 Debug.Log($"Компонент [{nameof(PoolManager)}] не найден.");
                 return;
             }
-        }
-
-        private void OnDestroy()
-        {
-            _compositeDisposable.Dispose();
         }
 
         /// <summary>
@@ -204,7 +198,7 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
 
             if (!_activeIndices.Add(index))
             {
-                Debug.LogWarning($"[{nameof(SpawnSegment)}] Сегмент {index} уже активен. Пропуск.");
+                Debug.LogWarning($"[{nameof(LevelGenerator)}] Сегмент {index} уже активен. Пропуск.");
                 return;
             }
 
@@ -445,8 +439,6 @@ namespace MyBuild.Scripts.Game.Components.LevelGenerate
                 if (road != null)
                 {
                     road.DespawnContent();
-                    //road.GetComponent<PickupSpawner>()?.ClearPickups();
-                    //road.GetComponent<DecorationPlacer>()?.ClearDecorations();
                 }
 
                 ReturnToPool(seg.obj);

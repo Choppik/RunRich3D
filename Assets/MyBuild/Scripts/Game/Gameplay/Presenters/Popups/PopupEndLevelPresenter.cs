@@ -1,11 +1,9 @@
 ﻿using MyBuild.Scripts.Game.Gameplay.Binderes;
 using MyBuild.Scripts.Game.Gameplay.Managers;
 using MyBuild.Scripts.Game.Settings;
-using MyBuild.Scripts.Game.State;
 using MyBuild.Scripts.Game.State.Providers;
 using MyBuild.Scripts.Utils.MVP.UI;
 using R3;
-using System.Linq;
 
 namespace MyBuild.Scripts.Game.Gameplay.Presenters
 {
@@ -48,14 +46,14 @@ namespace MyBuild.Scripts.Game.Gameplay.Presenters
             _manager.ClosePopup(Name);
 
             var map = _gameState.GameState.GetGurrentMap();
-            int nextLevel = 0;
+            int nextLevel = 1;
             if (map != null)
             {
-                var data = map.Dataes.FirstOrDefault();
+                var data = map.Progress;
 
                 if (data != null)
                 {
-                    nextLevel = 1 + data.CurrentLevel.Value;
+                    nextLevel += data.CurrentLevel.CurrentValue;
                 }
             }
 

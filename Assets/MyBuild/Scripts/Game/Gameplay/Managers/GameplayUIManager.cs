@@ -51,7 +51,7 @@ namespace MyBuild.Scripts.Game.Gameplay.Managers
         /// <returns>Презентер геймплея.</returns>
         public ScreenGameplayPresenter OpenGameplayPresenter()
         {
-            var presenter = new ScreenGameplayPresenter(this, _settingsProvider, _levelManager, _scoreManager);
+            var presenter = new ScreenGameplayPresenter(this, _settingsProvider, _levelManager, _scoreManager, _gameState);
 
             _rootPresenter.OpenScreen(presenter);
 
